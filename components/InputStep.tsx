@@ -5,7 +5,10 @@ import { useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Star, Globe, Upload, X, ArrowRight, Sparkles } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Star, Globe, Upload, X, ArrowRight, Sparkles, Info } from "lucide-react"
 import { useResponsive } from "@/hooks/useResponsive"
 import type { StepData } from "@/lib/steps"
 
@@ -45,17 +48,17 @@ export default function InputStep({ data, onDataChange, onNext, onShowTemplates 
       <Card className={`w-full mx-auto ${isMobile ? "max-w-sm" : isTablet ? "max-w-lg" : "max-w-xl"}`}>
         <CardHeader className={isMobile ? "p-4 pb-2" : "p-6"}>
           <div className="text-center mb-4">
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
-              <span className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs">
+            <Badge className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
+              <span className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs mr-2">
                 1
               </span>
               Business Information
-            </div>
+            </Badge>
           </div>
           <CardTitle className={`font-bold text-center ${isMobile ? "text-xl" : "text-2xl"}`}>
             Create Your QR Code
           </CardTitle>
-          <p className={`text-center text-gray-600 ${isMobile ? "text-sm" : ""}`}>
+          <p className={`text-center text-muted-foreground ${isMobile ? "text-sm" : ""}`}>
             Enter your business details to get started
           </p>
         </CardHeader>
@@ -99,13 +102,16 @@ export default function InputStep({ data, onDataChange, onNext, onShowTemplates 
               </Button>
             </div>
             {data.qrType === "feedback" && (
-              <div className="text-center">
-                <p className="text-xs text-gray-500">
+              <Alert>
+                <Info className="h-4 w-4" />
+                <AlertDescription>
                   💡 Tip: Use Google colors in customization for authentic review experience
-                </p>
-              </div>
+                </AlertDescription>
+              </Alert>
             )}
           </div>
+
+          <Separator />
 
           {/* Business Name */}
           <div className="space-y-2">
@@ -139,12 +145,14 @@ export default function InputStep({ data, onDataChange, onNext, onShowTemplates 
               className={`w-full ${isMobile ? "h-12" : "h-14 text-lg"}`}
               required
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {data.qrType === "feedback"
                 ? "Paste your Google Review link or feedback form URL"
                 : "Enter your complete website URL including https://"}
             </p>
           </div>
+
+          <Separator />
 
           {/* Logo Upload */}
           <div className="space-y-3">
@@ -164,7 +172,7 @@ export default function InputStep({ data, onDataChange, onNext, onShowTemplates 
                   variant="outline"
                   size="sm"
                   onClick={removeImage}
-                  className={`text-red-600 hover:text-red-700 ${isMobile ? "w-full h-10" : ""}`}
+                  className={`text-destructive hover:text-destructive ${isMobile ? "w-full h-10" : ""}`}
                 >
                   <X className="h-4 w-4 mr-1" />
                   Remove
@@ -182,6 +190,8 @@ export default function InputStep({ data, onDataChange, onNext, onShowTemplates 
             )}
           </div>
 
+          <Separator />
+
           {/* Action Buttons */}
           <div className="space-y-3 pt-4">
             <Button onClick={onNext} disabled={!isValid} className={`w-full ${isMobile ? "h-12" : "h-14 text-lg"}`}>
@@ -197,11 +207,11 @@ export default function InputStep({ data, onDataChange, onNext, onShowTemplates 
 
           {/* Help Text */}
           <div className="text-center pt-4 border-t">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Need help? Check our{" "}
-              <a href="#" className="text-blue-600 hover:underline">
+              <Button variant="link" className="p-0 h-auto text-xs">
                 quick start guide
-              </a>
+              </Button>
             </p>
           </div>
         </CardContent>

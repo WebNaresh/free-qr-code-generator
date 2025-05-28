@@ -3,6 +3,8 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 import { X } from "lucide-react"
 import type { QRCustomization } from "@/lib/customization"
 import { useResponsive } from "@/hooks/useResponsive"
@@ -145,45 +147,47 @@ export default function ResponsiveTemplateSelector({
   if (!isVisible) return null
 
   const TemplateContent = () => (
-    <div className={`grid gap-3 ${isMobile ? "grid-cols-1" : isTablet ? "grid-cols-2" : "grid-cols-3"}`}>
-      {templates.map((template) => (
-        <Card
-          key={template.id}
-          className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
-        >
-          <CardContent className={`${isMobile ? "p-3" : "p-4"}`}>
-            <div className="flex items-start justify-between mb-3">
-              <div className={`${isMobile ? "text-2xl" : "text-3xl"}`}>{template.preview}</div>
-              <Badge variant="secondary" className={isMobile ? "text-xs px-2 py-1" : ""}>
-                {template.category}
-              </Badge>
-            </div>
-            <h3 className={`font-semibold mb-2 ${isMobile ? "text-base" : "text-lg"}`}>{template.name}</h3>
-            <p className={`text-gray-600 mb-4 ${isMobile ? "text-sm" : "text-sm"}`}>{template.description}</p>
-            <Button
-              onClick={() => {
-                onSelectTemplate(template.customization)
-                onClose()
-              }}
-              className={`w-full ${isMobile ? "h-9 text-sm" : ""}`}
-            >
-              Use Template
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <ScrollArea className="h-full">
+      <div className={`grid gap-3 p-1 ${isMobile ? "grid-cols-1" : isTablet ? "grid-cols-2" : "grid-cols-3"}`}>
+        {templates.map((template) => (
+          <Card
+            key={template.id}
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] border-2 hover:border-primary/50"
+          >
+            <CardContent className={`${isMobile ? "p-3" : "p-4"}`}>
+              <div className="flex items-start justify-between mb-3">
+                <div className={`${isMobile ? "text-2xl" : "text-3xl"}`}>{template.preview}</div>
+                <Badge variant="secondary" className={isMobile ? "text-xs px-2 py-1" : ""}>
+                  {template.category}
+                </Badge>
+              </div>
+              <h3 className={`font-semibold mb-2 ${isMobile ? "text-base" : "text-lg"}`}>{template.name}</h3>
+              <p className={`text-muted-foreground mb-4 ${isMobile ? "text-sm" : "text-sm"}`}>{template.description}</p>
+              <Button
+                onClick={() => {
+                  onSelectTemplate(template.customization)
+                  onClose()
+                }}
+                className={`w-full ${isMobile ? "h-9 text-sm" : ""}`}
+              >
+                Use Template
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </ScrollArea>
   )
 
   // Mobile: Full screen overlay
   if (isMobile) {
     return (
-      <div className="fixed inset-0 bg-white z-50 overflow-auto">
-        <div className="p-4 border-b bg-white sticky top-0 z-10">
+      <div className="fixed inset-0 bg-background z-50 overflow-auto">
+        <div className="p-4 border-b bg-background sticky top-0 z-10">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold">Choose Template</h2>
-              <p className="text-sm text-gray-600">Pick a design for your industry</p>
+              <p className="text-sm text-muted-foreground">Pick a design for your industry</p>
             </div>
             <Button variant="outline" size="sm" onClick={onClose}>
               <X className="h-4 w-4" />
@@ -199,19 +203,23 @@ export default function ResponsiveTemplateSelector({
 
   // Tablet/Desktop: Modal
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <Card className={`w-full max-h-[90vh] overflow-auto ${isTablet ? "max-w-2xl" : "max-w-4xl"}`}>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <Card className={`w-full max-h-[90vh] overflow-hidden ${isTablet ? "max-w-2xl" : "max-w-4xl"}`}>
         <CardContent className={isTablet ? "p-4" : "p-6"}>
           <div className="flex justify-between items-center mb-6">
             <div>
               <h2 className={`font-bold ${isTablet ? "text-xl" : "text-2xl"}`}>Choose a Template</h2>
-              <p className="text-gray-600">Start with a pre-designed template for your industry</p>
+              <p className="text-muted-foreground">Start with a pre-designed template for your industry</p>
             </div>
             <Button variant="outline" onClick={onClose}>
+              <X className="h-4 w-4 mr-2" />
               Close
             </Button>
           </div>
-          <TemplateContent />
+          <Separator className="mb-6" />
+          <div className="h-96">
+            <TemplateContent />
+          </div>
         </CardContent>
       </Card>
     </div>
