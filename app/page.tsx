@@ -1,9 +1,9 @@
-import SteppedQRCodeGenerator from "@/components/SteppedQRCodeGenerator"
+import QRCodeGenerator from "@/components/QRCodeGenerator"
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
-      <SteppedQRCodeGenerator />
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <QRCodeGenerator />
+    </main>
   )
 }
