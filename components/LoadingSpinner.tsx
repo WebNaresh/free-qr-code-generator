@@ -38,4 +38,4 @@ export function LoadingSpinner({ className, size = 'md' }: LoadingSpinnerProps) 
       </svg>
     </div>
   )
-} 
+}

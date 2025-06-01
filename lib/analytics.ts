@@ -31,4 +31,4 @@ declare global {
             params?: Record<string, any>
         ) => void
     }
-} 
+}
