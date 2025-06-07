@@ -5,7 +5,11 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Free QR Code Generator | Create Custom QR Codes for Business, Reviews & Websites',
   description: 'Create professional QR codes for your business, Google reviews, websites, and more. Free, customizable, and easy to use QR code generator with advanced features. No signup required.',
-  keywords: 'QR code generator, QR code creator, business QR code, Google review QR code, website QR code, free QR code, custom QR code, QR code maker, QR code scanner, QR code design',
+  keywords: [
+    'QR code generator', 'QR code creator', 'business QR code', 'Google review QR code', 'website QR code', 'free QR code', 'custom QR code', 'QR code maker', 'QR code scanner', 'QR code design',
+    'qr code free', 'free qr code generator', 'qr code free generator', 'free qr generator', 'qr generator free', 'qr code generator google', 'qr code online generator', 'online qr generator', 'qr code online', 'canva qr code generator', 'canva qr code', 'the qr code generator', 'adobe', 'adobe qr code', 'qr code generator adobe', 'qr code generator pdf', 'barcode generator', 'qr code link generator', 'barcode', 'qr barcode generator', 'qr scanner', 'create qr code', 'qr code generator online free', 'qr code scanner', 'qr code generator whatsapp',
+    'bulk qr code generator 128', 'upi qr code generator', 'uniqode', 'qr code generator free', 'qr code generator 128', 'bulk qr code generator', 'batch qr code generator', 'canva qr code generator', 'qrfy', 'canva qr code', 'bulk barcode generator'
+  ],
   authors: [{ name: 'QR Code Generator Team' }],
   creator: 'QR Code Generator',
   publisher: 'QR Code Generator',

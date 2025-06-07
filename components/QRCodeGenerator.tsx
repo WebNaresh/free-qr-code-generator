@@ -441,7 +441,7 @@ export default function QRCodeGenerator() {
               : {}
           }
         >
-          QR Code Generator
+         Free QR Code Generator
         </h1>
         <p className={`${responsive.subtitle} text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed`}>
           Create professional QR codes for your business - Free, fast, and customizable with intelligent color
