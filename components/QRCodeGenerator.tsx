@@ -332,24 +332,43 @@ export default function QRCodeGenerator() {
       : { primary: "text-indigo-800", secondary: "text-indigo-600", tertiary: "text-indigo-500" }
   }
 
-  // Responsive classes
+  // Enhanced responsive classes with larger font sizes
   const getResponsiveClasses = () => {
     return {
       card: isMobile ? "mx-2" : "mx-auto max-w-4xl",
-      title: isMobile ? "text-xl sm:text-2xl" : "text-2xl lg:text-3xl",
-      subtitle: isMobile ? "text-sm" : "text-base",
-      input: isMobile ? "text-base py-3" : "text-lg py-4",
-      button: isMobile ? "py-3 text-base" : "py-4 text-lg",
-      qrContainer: isMobile ? "p-4 sm:p-6" : isTablet ? "p-8" : "p-12",
-      qrTitle: isMobile ? "text-lg sm:text-xl" : isTablet ? "text-2xl" : "text-4xl",
-      qrSubtitle: isMobile ? "text-sm" : isTablet ? "text-base" : "text-xl",
-      qrBusinessName: isMobile ? "text-xl" : isTablet ? "text-2xl" : "text-3xl",
-      qrUrl: isMobile ? "text-xs" : isTablet ? "text-sm" : "text-xl",
-      qrFooter: isMobile ? "text-xs" : isTablet ? "text-sm" : "text-lg",
-      logoSize: isMobile ? "w-12 h-12" : isTablet ? "w-16 h-16" : "w-20 h-20",
-      qrCodeSize: isMobile ? "max-w-48" : isTablet ? "max-w-64" : "max-w-sm",
-      spacing: isMobile ? "space-y-4" : "space-y-6",
-      gap: isMobile ? "gap-2" : "gap-4",
+      // Main title - significantly larger
+      title: isMobile ? "text-3xl sm:text-4xl" : "text-4xl lg:text-5xl xl:text-6xl",
+      // Subtitle - increased for better readability
+      subtitle: isMobile ? "text-base sm:text-lg" : "text-lg lg:text-xl",
+      // Form inputs - larger for better usability
+      input: isMobile ? "text-lg py-4" : "text-xl py-5",
+      // Buttons - more prominent
+      button: isMobile ? "py-4 text-lg" : "py-5 text-xl",
+      // QR container padding
+      qrContainer: isMobile ? "p-6 sm:p-8" : isTablet ? "p-10" : "p-14",
+      // QR page titles - much larger for impact
+      qrTitle: isMobile ? "text-2xl sm:text-3xl" : isTablet ? "text-4xl" : "text-5xl xl:text-6xl",
+      // QR page subtitles - increased
+      qrSubtitle: isMobile ? "text-lg" : isTablet ? "text-xl" : "text-2xl",
+      // Business name - prominent
+      qrBusinessName: isMobile ? "text-2xl" : isTablet ? "text-3xl" : "text-4xl xl:text-5xl",
+      // URL text - readable
+      qrUrl: isMobile ? "text-sm" : isTablet ? "text-base" : "text-lg xl:text-xl",
+      // Footer text - clear
+      qrFooter: isMobile ? "text-sm" : isTablet ? "text-base" : "text-lg",
+      // Logo sizes - proportionally larger
+      logoSize: isMobile ? "w-16 h-16" : isTablet ? "w-20 h-20" : "w-24 h-24",
+      // QR code sizes
+      qrCodeSize: isMobile ? "max-w-56" : isTablet ? "max-w-72" : "max-w-80",
+      // Spacing
+      spacing: isMobile ? "space-y-6" : "space-y-8",
+      gap: isMobile ? "gap-3" : "gap-5",
+      // Labels - more prominent
+      label: isMobile ? "text-lg" : "text-xl",
+      // Color preview labels
+      colorLabel: isMobile ? "text-sm" : "text-base",
+      // Footer text
+      footerText: isMobile ? "text-base" : "text-lg",
     }
   }
 
@@ -363,8 +382,8 @@ export default function QRCodeGenerator() {
     if (!logoColors) return {}
 
     return {
-      background: `linear-gradient(to bottom right, ${logoColors.light}, ${logoColors.light})`,
-      borderColor: logoColors.primary,
+      background: `linear-gradient(135deg, ${logoColors.light}E6, ${logoColors.light}CC)`,
+      borderColor: `${logoColors.primary}40`,
     }
   }
 
@@ -372,8 +391,14 @@ export default function QRCodeGenerator() {
     if (!logoColors) return {}
 
     return {
-      topLeft: { backgroundColor: `${logoColors.primary}30` },
-      bottomRight: { backgroundColor: `${logoColors.secondary}30` },
+      topLeft: {
+        backgroundColor: `${logoColors.primary}40`,
+        background: `radial-gradient(circle, ${logoColors.primary}40, ${logoColors.primary}20)`,
+      },
+      bottomRight: {
+        backgroundColor: `${logoColors.secondary}40`,
+        background: `radial-gradient(circle, ${logoColors.secondary}40, ${logoColors.secondary}20)`,
+      },
     }
   }
 
@@ -381,9 +406,18 @@ export default function QRCodeGenerator() {
     if (!logoColors) return {}
 
     return {
-      primary: { color: logoColors.dark },
-      secondary: { color: logoColors.primary },
-      tertiary: { color: logoColors.secondary },
+      primary: {
+        color: logoColors.dark || logoColors.primary,
+        textShadow: `0 1px 2px ${logoColors.primary}20`,
+      },
+      secondary: {
+        color: logoColors.primary,
+        opacity: 0.9,
+      },
+      tertiary: {
+        color: logoColors.secondary || logoColors.primary,
+        opacity: 0.8,
+      },
     }
   }
 
@@ -394,9 +428,9 @@ export default function QRCodeGenerator() {
   return (
     <div className="w-full">
       {/* Header Section */}
-      <div className="text-center mb-6 lg:mb-8">
+      <div className="text-center mb-8 lg:mb-12">
         <h1
-          className={`font-bold ${responsive.title} bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2`}
+          className={`font-bold ${responsive.title} bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4`}
           style={
             logoColors
               ? {
@@ -409,107 +443,121 @@ export default function QRCodeGenerator() {
         >
           QR Code Generator
         </h1>
-        <p className={`${responsive.subtitle} text-gray-600 max-w-2xl mx-auto px-4`}>
-          Create professional QR codes for your business - Free, fast, and customizable
+        <p className={`${responsive.subtitle} text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed`}>
+          Create professional QR codes for your business - Free, fast, and customizable with intelligent color
+          extraction from your logo
         </p>
 
         {/* Device indicators */}
-        <div className="flex justify-center items-center gap-2 mt-4 text-gray-400">
-          <Smartphone className={`h-4 w-4 ${isMobile ? "text-blue-500" : ""}`} />
-          <Tablet className={`h-4 w-4 ${isTablet ? "text-blue-500" : ""}`} />
-          <Monitor className={`h-4 w-4 ${!isMobile && !isTablet ? "text-blue-500" : ""}`} />
+        <div className="flex justify-center items-center gap-3 mt-6 text-gray-400">
+          <div className="flex items-center gap-2">
+            <Smartphone className={`h-5 w-5 ${isMobile ? "text-blue-500" : ""}`} />
+            <span className="text-sm font-medium">Mobile</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Tablet className={`h-5 w-5 ${isTablet ? "text-blue-500" : ""}`} />
+            <span className="text-sm font-medium">Tablet</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Monitor className={`h-5 w-5 ${!isMobile && !isTablet ? "text-blue-500" : ""}`} />
+            <span className="text-sm font-medium">Desktop</span>
+          </div>
         </div>
       </div>
 
       <Card className={`${responsive.card} shadow-xl border-0 bg-white/80 backdrop-blur-sm`}>
-        <CardHeader className="pb-4">
+        <CardHeader className="pb-6">
           <CardTitle className="sr-only">QR Code Configuration</CardTitle>
         </CardHeader>
         <CardContent className={responsive.spacing}>
           {/* QR Type Selection */}
           <div className={responsive.spacing}>
-            <label className={`${isMobile ? "text-base" : "text-lg"} font-semibold block mb-3`}>
-              Choose QR Code Type:
-            </label>
+            <label className={`${responsive.label} font-semibold block mb-4`}>Choose QR Code Type:</label>
             <div className={`flex ${isMobile ? "flex-col" : "flex-row"} ${responsive.gap}`}>
               <Button
                 variant={qrType === "feedback" ? "default" : "outline"}
                 onClick={() => setQrType("feedback")}
-                className={`flex-1 ${responsive.button} ${isMobile ? "justify-start" : "justify-center"}`}
+                className={`flex-1 ${responsive.button} ${isMobile ? "justify-start" : "justify-center"} font-semibold`}
                 style={
                   qrType === "feedback" && logoColors
                     ? { backgroundColor: logoColors.primary, borderColor: logoColors.primary }
                     : {}
                 }
               >
-                <Star className="mr-2 h-5 w-5" />
+                <Star className="mr-3 h-6 w-6" />
                 <span className={isMobile ? "text-left" : "text-center"}>Feedback/Reviews</span>
               </Button>
               <Button
                 variant={qrType === "website" ? "default" : "outline"}
                 onClick={() => setQrType("website")}
-                className={`flex-1 ${responsive.button} ${isMobile ? "justify-start" : "justify-center"}`}
+                className={`flex-1 ${responsive.button} ${isMobile ? "justify-start" : "justify-center"} font-semibold`}
                 style={
                   qrType === "website" && logoColors
                     ? { backgroundColor: logoColors.primary, borderColor: logoColors.primary }
                     : {}
                 }
               >
-                <Globe className="mr-2 h-5 w-5" />
+                <Globe className="mr-3 h-6 w-6" />
                 <span className={isMobile ? "text-left" : "text-center"}>Business Website</span>
               </Button>
             </div>
           </div>
 
-          <Input
-            type="text"
-            placeholder="Enter Business Name"
-            value={businessName}
-            onChange={(e) => setBusinessName(e.target.value)}
-            className={`w-full ${responsive.input} border-2 focus:border-blue-500 transition-colors`}
-            style={
-              logoColors
-                ? { borderColor: `${logoColors.primary}40`, boxShadow: `0 0 0 1px ${logoColors.primary}00` }
-                : {}
-            }
-            required
-          />
+          <div>
+            <label className={`${responsive.label} font-semibold block mb-3`}>Business Name:</label>
+            <Input
+              type="text"
+              placeholder="Enter your business name"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              className={`w-full ${responsive.input} border-2 focus:border-blue-500 transition-colors font-medium`}
+              style={
+                logoColors
+                  ? { borderColor: `${logoColors.primary}40`, boxShadow: `0 0 0 1px ${logoColors.primary}00` }
+                  : {}
+              }
+              required
+            />
+          </div>
 
-          <Input
-            type="text"
-            placeholder={
-              qrType === "feedback"
-                ? isMobile
-                  ? "Google Review URL"
-                  : "Enter Google Review URL or Feedback Link"
-                : isMobile
-                  ? "Business Website URL"
-                  : "Enter Business Website URL"
-            }
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className={`w-full ${responsive.input} border-2 focus:border-blue-500 transition-colors`}
-            style={
-              logoColors
-                ? { borderColor: `${logoColors.primary}40`, boxShadow: `0 0 0 1px ${logoColors.primary}00` }
-                : {}
-            }
-            required
-          />
+          <div>
+            <label className={`${responsive.label} font-semibold block mb-3`}>
+              {qrType === "feedback" ? "Review/Feedback URL:" : "Website URL:"}
+            </label>
+            <Input
+              type="text"
+              placeholder={
+                qrType === "feedback"
+                  ? isMobile
+                    ? "Google Review URL"
+                    : "Enter Google Review URL or Feedback Link"
+                  : isMobile
+                    ? "Business Website URL"
+                    : "Enter Business Website URL"
+              }
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className={`w-full ${responsive.input} border-2 focus:border-blue-500 transition-colors font-medium`}
+              style={
+                logoColors
+                  ? { borderColor: `${logoColors.primary}40`, boxShadow: `0 0 0 1px ${logoColors.primary}00` }
+                  : {}
+              }
+              required
+            />
+          </div>
 
           {/* Image Upload Section */}
           <div className={responsive.spacing}>
-            <label className={`${isMobile ? "text-base" : "text-lg"} font-semibold block mb-3`}>
-              Upload Logo/Image (Optional):
-            </label>
+            <label className={`${responsive.label} font-semibold block mb-4`}>Upload Logo/Image (Optional):</label>
             <div className={`flex ${isMobile ? "flex-col" : "flex-row"} items-center ${responsive.gap}`}>
               <Button
                 variant="outline"
                 onClick={() => fileInputRef.current?.click()}
-                className={`${isMobile ? "w-full" : ""} flex items-center gap-2 border-2 hover:border-blue-500 transition-colors`}
+                className={`${isMobile ? "w-full" : ""} flex items-center gap-3 border-2 hover:border-blue-500 transition-colors ${responsive.button} font-semibold`}
                 style={logoColors ? { borderColor: logoColors.primary, color: logoColors.primary } : {}}
               >
-                <Upload className="h-4 w-4" />
+                <Upload className="h-5 w-5" />
                 Choose Image
               </Button>
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
@@ -518,19 +566,19 @@ export default function QRCodeGenerator() {
                   variant="outline"
                   size="sm"
                   onClick={removeImage}
-                  className={`${isMobile ? "w-full" : ""} text-red-600 hover:text-red-700 border-red-200 hover:border-red-300`}
+                  className={`${isMobile ? "w-full" : ""} text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 ${responsive.button} font-semibold`}
                 >
-                  <X className="h-4 w-4" />
-                  Remove
+                  <X className="h-5 w-5" />
+                  Remove Image
                 </Button>
               )}
             </div>
             {uploadedImage && (
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-center mt-6">
                 <img
                   src={uploadedImage || "/placeholder.svg"}
                   alt="Uploaded logo"
-                  className={`${isMobile ? "max-w-24 max-h-24" : "max-w-32 max-h-32"} object-contain border-2 rounded-lg shadow-sm`}
+                  className={`${isMobile ? "max-w-32 max-h-32" : "max-w-40 max-h-40"} object-contain border-2 rounded-lg shadow-sm`}
                   style={logoColors ? { borderColor: `${logoColors.primary}40` } : {}}
                 />
               </div>
@@ -538,27 +586,27 @@ export default function QRCodeGenerator() {
           </div>
 
           {uploadedImage && logoColors && (
-            <div className="flex justify-center items-center gap-4 mt-4">
+            <div className="flex justify-center items-center gap-6 mt-6 p-4 bg-gray-50 rounded-lg">
               <div className="flex flex-col items-center">
                 <div
-                  className="w-8 h-8 rounded-full border border-gray-200 shadow-sm"
+                  className="w-10 h-10 rounded-full border border-gray-200 shadow-sm mb-2"
                   style={{ backgroundColor: logoColors.primary }}
                 />
-                <span className="text-xs mt-1">Primary</span>
+                <span className={`${responsive.colorLabel} font-medium`}>Primary</span>
               </div>
               <div className="flex flex-col items-center">
                 <div
-                  className="w-8 h-8 rounded-full border border-gray-200 shadow-sm"
+                  className="w-10 h-10 rounded-full border border-gray-200 shadow-sm mb-2"
                   style={{ backgroundColor: logoColors.secondary }}
                 />
-                <span className="text-xs mt-1">Secondary</span>
+                <span className={`${responsive.colorLabel} font-medium`}>Secondary</span>
               </div>
             </div>
           )}
 
           <Button
             onClick={generateQRCode}
-            className={`w-full ${responsive.button} bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200`}
+            className={`w-full ${responsive.button} bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200 font-bold`}
             style={
               logoColors
                 ? { background: `linear-gradient(to right, ${logoColors.primary}, ${logoColors.secondary})` }
@@ -570,20 +618,43 @@ export default function QRCodeGenerator() {
           </Button>
 
           {qrCode && (
-            <div className={`mt-6 ${responsive.spacing}`}>
+            <div className={`mt-8 ${responsive.spacing}`}>
               <div
                 ref={qrCodeRef}
                 className={`flex flex-col items-center justify-between ${responsive.qrContainer} rounded-xl shadow-2xl overflow-hidden relative`}
-                style={qrCodeStyles}
+                style={{
+                  ...qrCodeStyles,
+                  background: logoColors
+                    ? `linear-gradient(135deg, ${logoColors.light}E6 0%, ${logoColors.light}CC 50%, ${logoColors.light}E6 100%)`
+                    : undefined,
+                  aspectRatio: isMobile ? "1 / 1.2" : "1 / 1.414",
+                  width: "100%",
+                  maxWidth: isMobile ? "100%" : isTablet ? "600px" : "800px",
+                  margin: "0 auto",
+                }}
               >
                 {/* Decorative elements - responsive */}
                 <div
                   className={`absolute top-0 left-0 w-full h-full border-[${isMobile ? "8px" : "16px"}] rounded-xl pointer-events-none`}
-                  style={logoColors ? { borderColor: `${logoColors.primary}30` } : {}}
+                  style={
+                    logoColors
+                      ? {
+                          borderColor: `${logoColors.primary}50`,
+                          borderWidth: isMobile ? "8px" : "16px",
+                        }
+                      : {}
+                  }
                 />
                 <div
                   className={`absolute ${isMobile ? "top-2 left-2 right-2 bottom-2" : "top-4 left-4 right-4 bottom-4"} border-[2px] rounded-xl pointer-events-none`}
-                  style={logoColors ? { borderColor: `${logoColors.primary}40` } : {}}
+                  style={
+                    logoColors
+                      ? {
+                          borderColor: `${logoColors.primary}70`,
+                          borderWidth: "2px",
+                        }
+                      : {}
+                  }
                 />
                 <div
                   className={`absolute top-0 left-0 ${isMobile ? "w-16 h-16" : "w-32 h-32"} rounded-br-full opacity-50`}
@@ -595,9 +666,9 @@ export default function QRCodeGenerator() {
                 />
 
                 {/* Content */}
-                <div className={`z-10 text-center ${isMobile ? "mb-4" : "mb-8"}`}>
+                <div className={`z-10 text-center ${isMobile ? "mb-6" : "mb-10"}`}>
                   {uploadedImage && (
-                    <div className={isMobile ? "mb-2" : "mb-4"}>
+                    <div className={isMobile ? "mb-4" : "mb-6"}>
                       <img
                         src={uploadedImage || "/placeholder.svg"}
                         alt="Business logo"
@@ -606,18 +677,18 @@ export default function QRCodeGenerator() {
                     </div>
                   )}
                   <h2
-                    className={`${responsive.qrTitle} font-bold ${isMobile ? "mb-1" : "mb-2"} leading-tight`}
+                    className={`${responsive.qrTitle} font-bold ${isMobile ? "mb-2" : "mb-4"} leading-tight`}
                     style={textStyles.primary}
                   >
                     {getHeaderText()}
                   </h2>
-                  <p className={`${responsive.qrSubtitle} leading-relaxed`} style={textStyles.secondary}>
+                  <p className={`${responsive.qrSubtitle} leading-relaxed font-medium`} style={textStyles.secondary}>
                     {getSubHeaderText()}
                   </p>
                 </div>
 
                 <div
-                  className={`z-10 bg-white ${isMobile ? "p-3" : "p-6"} rounded-xl shadow-lg border border-gray-100`}
+                  className={`z-10 bg-white ${isMobile ? "p-4" : "p-8"} rounded-xl shadow-lg border border-gray-100`}
                 >
                   <img
                     src={qrCode || "/placeholder.svg"}
@@ -626,21 +697,21 @@ export default function QRCodeGenerator() {
                   />
                 </div>
 
-                <div className={`z-10 text-center ${isMobile ? "mt-4" : "mt-8"}`}>
+                <div className={`z-10 text-center ${isMobile ? "mt-6" : "mt-10"}`}>
                   <h3
-                    className={`${responsive.qrBusinessName} font-semibold ${isMobile ? "mb-1" : "mb-2"}`}
+                    className={`${responsive.qrBusinessName} font-bold ${isMobile ? "mb-2" : "mb-4"}`}
                     style={textStyles.primary}
                   >
                     {businessName}
                   </h3>
                   <p
-                    className={`${responsive.qrUrl} ${isMobile ? "mb-2" : "mt-2"} break-all px-2`}
+                    className={`${responsive.qrUrl} ${isMobile ? "mb-3" : "mt-3"} break-all px-4 font-medium`}
                     style={textStyles.secondary}
                   >
                     {url}
                   </p>
                   <p
-                    className={`${responsive.qrFooter} ${isMobile ? "mt-2" : "mt-4"} opacity-90`}
+                    className={`${responsive.qrFooter} ${isMobile ? "mt-3" : "mt-6"} opacity-90 font-medium`}
                     style={textStyles.tertiary}
                   >
                     {getFooterText()}
@@ -650,14 +721,14 @@ export default function QRCodeGenerator() {
 
               <Button
                 onClick={downloadQRCodePage}
-                className={`w-full ${responsive.button} bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-200 mt-6`}
+                className={`w-full ${responsive.button} bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-200 mt-8 font-bold`}
                 style={
                   logoColors
                     ? { background: `linear-gradient(to right, ${logoColors.secondary}, ${logoColors.primary})` }
                     : {}
                 }
               >
-                <Download className="mr-3 h-5 w-5" />
+                <Download className="mr-4 h-6 w-6" />
                 Download QR Code
               </Button>
             </div>
@@ -666,8 +737,8 @@ export default function QRCodeGenerator() {
       </Card>
 
       {/* Footer */}
-      <footer className="text-center mt-8 px-4">
-        <p className={`${responsive.subtitle} text-gray-500`}>
+      <footer className="text-center mt-12 px-4">
+        <p className={`${responsive.footerText} text-gray-500 font-medium`}>
           Free QR Code Generator • No signup required • Professional quality
         </p>
       </footer>
