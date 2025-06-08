@@ -429,40 +429,8 @@ export default function QRCodeGenerator() {
     <div className="w-full">
       {/* Header Section */}
       <div className="text-center mb-8 lg:mb-12">
-        <h1
-          className={`font-bold ${responsive.title} bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4`}
-          style={
-            logoColors
-              ? {
-                  background: `linear-gradient(to right, ${logoColors.primary}, ${logoColors.secondary})`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }
-              : {}
-          }
-        >
-         Free QR Code Generator
-        </h1>
-        <p className={`${responsive.subtitle} text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed`}>
-          Create professional QR codes for your business - Free, fast, and customizable with intelligent color
-          extraction from your logo
-        </p>
-
-        {/* Device indicators */}
-        <div className="flex justify-center items-center gap-3 mt-6 text-gray-400">
-          <div className="flex items-center gap-2">
-            <Smartphone className={`h-5 w-5 ${isMobile ? "text-blue-500" : ""}`} />
-            <span className="text-sm font-medium">Mobile</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Tablet className={`h-5 w-5 ${isTablet ? "text-blue-500" : ""}`} />
-            <span className="text-sm font-medium">Tablet</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Monitor className={`h-5 w-5 ${!isMobile && !isTablet ? "text-blue-500" : ""}`} />
-            <span className="text-sm font-medium">Desktop</span>
-          </div>
-        </div>
+      
+   
       </div>
 
       <Card className={`${responsive.card} shadow-xl border-0 bg-white/80 backdrop-blur-sm`}>

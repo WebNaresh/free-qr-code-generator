@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import './globals.css'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Free QR Code Generator | Create Custom QR Codes for Business, Reviews & Websites',
@@ -70,7 +72,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-      <meta name="google-adsense-account" content="ca-pub-4895071519734738"></meta>
+        <meta name="google-adsense-account" content="ca-pub-4895071519734738"></meta>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-E6JPKTRP50"
           strategy="afterInteractive"
@@ -90,7 +92,15 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
       </head>
-      <body>{children}</body>
+      <body suppressHydrationWarning>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </div>
+      </body>
     </html>
   )
 }
