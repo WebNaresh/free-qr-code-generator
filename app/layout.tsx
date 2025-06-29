@@ -3,6 +3,7 @@ import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { usePathname } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Free QR Code Generator | Create Custom QR Codes for Business, Reviews & Websites',
@@ -64,11 +65,24 @@ export const metadata: Metadata = {
     generator: 'v0.dev'
 }
 
+const ADSENSE_ALLOWED_PATHS = [
+  '/',
+  '/about',
+  '/faq',
+  '/blog',
+  '/privacy-policy',
+  '/terms',
+  '/contact',
+]
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : ''
+  const showAds = ADSENSE_ALLOWED_PATHS.includes(pathname)
+
   return (
     <html lang="en">
       <head>
@@ -85,12 +99,14 @@ export default function RootLayout({
             gtag('config', 'G-E6JPKTRP50');
           `}
         </Script>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4895071519734738"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {showAds && (
+          <Script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4895071519734738"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </head>
       <body suppressHydrationWarning>
         <div className="min-h-screen flex flex-col">
