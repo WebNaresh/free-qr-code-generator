@@ -591,10 +591,10 @@ export default function QRCodeGenerator() {
                 ref={qrCodeRef}
                 className={`flex flex-col items-center justify-between ${responsive.qrContainer} rounded-xl shadow-2xl overflow-hidden relative`}
                 style={{
-                  ...qrCodeStyles,
-                  background: logoColors
-                    ? `linear-gradient(135deg, ${logoColors.light}E6 0%, ${logoColors.light}CC 50%, ${logoColors.light}E6 100%)`
-                    : undefined,
+                  border: logoColors ? `4px solid ${logoColors.primary}` : '4px solid #e5e7eb',
+                  background: qrType === "feedback"
+                    ? "linear-gradient(135deg, #fff7ed 0%, #ffe4e6 100%)"
+                    : "linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)",
                   aspectRatio: isMobile ? "1 / 1.2" : "1 / 1.414",
                   width: "100%",
                   maxWidth: isMobile ? "100%" : isTablet ? "600px" : "800px",
