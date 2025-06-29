@@ -17,6 +17,14 @@ export default function Home() {
           </div>
         </section>
 
+        {/* What is Free QR Code Generator? */}
+        <section className="mb-12 text-gray-700 max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4 text-blue-800">What is Free QR Code Generator?</h2>
+          <p className="mb-4">
+            Free QR Code Generator is a simple, powerful tool that lets you create high-quality QR codes for any purpose. Whether you're a business owner, marketer, teacher, or just need a QR code for personal use, our platform is designed for you. We focus on privacy, ease of use, and customization—so you can generate QR codes that match your brand and needs, instantly and for free.
+          </p>
+        </section>
+
         {/* QR Code Generator */}
         <section className="mb-12">
           <QRCodeGenerator />
@@ -27,7 +35,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-4 text-blue-800">How It Works</h2>
           <ol className="list-decimal pl-6 space-y-2 text-gray-700">
             <li>Enter your content (URL, text, contact info, etc.).</li>
-            <li>Customize the QR code's color, size, and style.</li>
+            <li>Customize your QR code's color, size, and style.</li>
             <li>Preview your QR code instantly.</li>
             <li>Download your QR code in high resolution for free.</li>
           </ol>
@@ -35,13 +43,13 @@ export default function Home() {
 
         {/* Why Choose Us */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Why Choose Our QR Code Generator?</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-800">Why Use Our QR Code Generator?</h2>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
-            <li><strong>Completely Free:</strong> No hidden costs, no signups, no watermarks.</li>
-            <li><strong>Customizable:</strong> Choose colors, shapes, and more to match your brand.</li>
-            <li><strong>Secure & Private:</strong> We don't store your data or generated codes.</li>
-            <li><strong>Mobile Friendly:</strong> Works perfectly on any device.</li>
+            <li><strong>Completely Free:</strong> No hidden fees, no watermarks, and no registration required.</li>
             <li><strong>Unlimited Usage:</strong> Generate as many QR codes as you need.</li>
+            <li><strong>Customizable:</strong> Personalize your QR codes with colors and logos.</li>
+            <li><strong>Secure & Private:</strong> We never store your data or generated codes.</li>
+            <li><strong>Mobile Friendly:</strong> Works perfectly on any device.</li>
           </ul>
         </section>
 
@@ -74,6 +82,13 @@ export default function Home() {
               <p>Direct users to your website, social media, or landing pages.</p>
             </div>
           </div>
+        </section>
+
+        {/* Trust & Support */}
+        <section className="mb-12 text-center text-gray-700">
+          <h2 className="text-2xl font-bold mb-2 text-blue-800">Trusted by Thousands</h2>
+          <p className="mb-2">Join thousands of users who trust Free QR Code Generator for their business and personal needs.</p>
+          <p className="mb-2">Need help? Visit our <a href="/faq" className="text-blue-700 underline">FAQ</a> or <a href="/contact" className="text-blue-700 underline">Contact</a> page.</p>
         </section>
 
         {/* Call to Action */}

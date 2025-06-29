@@ -32,6 +32,18 @@ export default function Contact() {
             <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded font-semibold hover:bg-blue-700 transition">Send Message</button>
           </form>
         </section>
+        <section>
+          <h2 className="text-2xl font-semibold mb-2">Our Response Time</h2>
+          <p>We strive to respond to all inquiries within 24-48 hours. Your feedback is important to us and helps us improve our service.</p>
+        </section>
+        <section>
+          <h2 className="text-2xl font-semibold mb-2">Your Privacy</h2>
+          <p>All information you provide through this form or by email is kept confidential and is never shared with third parties. For more details, see our <a href="/privacy-policy" className="text-blue-700 underline">Privacy Policy</a>.</p>
+        </section>
+        <section>
+          <h2 className="text-2xl font-semibold mb-2">Alternative Support</h2>
+          <p>If you prefer, you can also reach out to us via our social media channels or check our <a href="/faq" className="text-blue-700 underline">FAQ</a> for quick answers to common questions.</p>
+        </section>
       </div>
     </div>
   )

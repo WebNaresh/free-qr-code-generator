@@ -39,6 +39,18 @@ export default function FAQ() {
           <p>QR codes generated here do not expire. Once downloaded, you can use them as long as you need.</p>
         </section>
         <section>
+          <h2 className="text-2xl font-semibold mb-2">Can I customize the look of my QR code?</h2>
+          <p>Yes! You can change the color, add a logo, and adjust the style of your QR code to match your brand or personal preference.</p>
+        </section>
+        <section>
+          <h2 className="text-2xl font-semibold mb-2">Do you track or analyze the QR codes I generate?</h2>
+          <p>No, we do not track, analyze, or store any QR codes you create. Your privacy is our top priority.</p>
+        </section>
+        <section>
+          <h2 className="text-2xl font-semibold mb-2">Can I generate QR codes in bulk?</h2>
+          <p>Currently, our tool is focused on single QR code generation for simplicity and privacy. We may add bulk generation features in the future based on user feedback.</p>
+        </section>
+        <section>
           <h2 className="text-2xl font-semibold mb-2">Who can I contact for support?</h2>
           <p>If you have questions or need help, please visit our Contact page or email us at support@freeqrcodegenerator.com.</p>
         </section>

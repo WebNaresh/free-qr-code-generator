@@ -11,6 +11,12 @@ export default function About() {
       <h1 className="text-4xl font-bold mb-8">About Free QR Code Generator</h1>
       <div className="space-y-8 text-gray-700">
         <section>
+          <h2 className="text-2xl font-semibold mb-2">Our Story</h2>
+          <p>
+            Free QR Code Generator was born out of a simple need: to make QR code creation accessible, private, and truly free for everyone. We noticed that many online tools either charged hidden fees, added watermarks, or required unnecessary signups. Our team set out to build a platform that puts users first—no barriers, no tricks, just fast and reliable QR code generation.
+          </p>
+        </section>
+        <section>
           <h2 className="text-2xl font-semibold mb-2">Our Mission</h2>
           <p>Our mission is to make QR code creation accessible, free, and easy for everyone. We believe in empowering businesses, creators, and individuals with the tools they need to connect and share information effortlessly.</p>
         </section>
@@ -24,8 +30,16 @@ export default function About() {
           </ul>
         </section>
         <section>
-          <h2 className="text-2xl font-semibold mb-2">Who We Are</h2>
-          <p>We are a team of developers and designers passionate about making digital tools that are open, useful, and user-centric. We're always working to improve and welcome your feedback!</p>
+          <h2 className="text-2xl font-semibold mb-2">Meet the Team</h2>
+          <p>
+            We are a small, passionate group of developers and designers who believe in open, user-centric digital tools. Our backgrounds range from software engineering to graphic design, and we're united by a commitment to quality and transparency. We're always working to improve and welcome your feedback!
+          </p>
+        </section>
+        <section>
+          <h2 className="text-2xl font-semibold mb-2">Our Vision for the Future</h2>
+          <p>
+            We aim to keep innovating and expanding our features—while always keeping the core service free and privacy-focused. In the future, we plan to add more customization, analytics, and integrations to help you get even more value from your QR codes.
+          </p>
         </section>
         <section>
           <h2 className="text-2xl font-semibold mb-2">Contact Us</h2>
