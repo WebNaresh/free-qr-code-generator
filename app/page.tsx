@@ -53,6 +53,14 @@ export default function Home() {
           </ul>
         </section>
 
+        {/* Ad Space - Top Banner */}
+        <section className="mb-12">
+          <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <p className="text-gray-500 text-sm">Advertisement Space - 728x90 Banner</p>
+            <div className="h-20 bg-gray-200 rounded mt-2"></div>
+          </div>
+        </section>
+
         {/* Popular Use Cases */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Popular Use Cases</h2>
@@ -81,6 +89,14 @@ export default function Home() {
               <h3 className="font-semibold mb-2">Website Links</h3>
               <p>Direct users to your website, social media, or landing pages.</p>
             </div>
+          </div>
+        </section>
+
+        {/* Ad Space - Middle Rectangle */}
+        <section className="mb-12">
+          <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <p className="text-gray-500 text-sm">Advertisement Space - 300x250 Rectangle</p>
+            <div className="h-32 bg-gray-200 rounded mt-2 mx-auto max-w-xs"></div>
           </div>
         </section>
 

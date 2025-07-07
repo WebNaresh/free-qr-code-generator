@@ -1,8 +1,10 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Blog & Resources | Free QR Code Generator',
-  description: 'Learn more about QR codes, their uses, and best practices from our blog and resources.',
+  title: 'QR Code Blog & Resources | Free QR Code Generator',
+  description: 'Comprehensive guides, tutorials, and best practices for QR codes. Learn how to create effective QR codes for business, marketing, and personal use.',
+  keywords: 'QR code blog, QR code tutorials, QR code marketing, QR code best practices, QR code guides',
 }
 
 export default function Blog() {
