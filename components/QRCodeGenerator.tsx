@@ -10,6 +10,28 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Download, Star, Globe, Upload, X, Smartphone, Tablet, Monitor } from "lucide-react"
 
+// Google Icon Component
+const GoogleIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+  </svg>
+)
+
+// Star Rating Component
+const StarRating = ({ rating = 5, className = "" }: { rating?: number; className?: string }) => (
+  <div className={`flex items-center gap-1 ${className}`}>
+    {[1, 2, 3, 4, 5].map((star) => (
+      <Star
+        key={star}
+        className={`w-5 h-5 ${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'}`}
+      />
+    ))}
+  </div>
+)
+
 export default function QRCodeGenerator() {
   const [url, setUrl] = useState("")
   const [businessName, setBusinessName] = useState("")
@@ -163,6 +185,11 @@ export default function QRCodeGenerator() {
       // Get primary color (most frequent)
       const primaryColor = distinctColors[0]?.hex || "#FF0000"
 
+      // Find the darkest color from extracted colors
+      const darkestColor = distinctColors.reduce((darkest, current) => {
+        return current.brightness < darkest.brightness ? current : darkest
+      }, distinctColors[0])?.hex || "#000000"
+
       // Find a good secondary color (different enough from primary)
       const secondaryColor =
         distinctColors.find((c) => {
@@ -180,7 +207,7 @@ export default function QRCodeGenerator() {
       // Create light and dark variants
       const primaryRgb = hexToRgb(primaryColor)
       let lightColor = "#FFFFFF"
-      let darkColor = "#000000"
+      let darkColor = darkestColor // Use the darkest extracted color
 
       if (primaryRgb) {
         // Create light variant (for backgrounds)
@@ -188,12 +215,6 @@ export default function QRCodeGenerator() {
         const lightG = Math.min(255, primaryRgb.g + 150)
         const lightB = Math.min(255, primaryRgb.b + 150)
         lightColor = rgbToHex(lightR, lightG, lightB)
-
-        // Create dark variant (for text)
-        const darkR = Math.max(0, primaryRgb.r - 100)
-        const darkG = Math.max(0, primaryRgb.g - 100)
-        const darkB = Math.max(0, primaryRgb.b - 100)
-        darkColor = rgbToHex(darkR, darkG, darkB)
       }
 
       // Set the extracted colors
@@ -209,6 +230,7 @@ export default function QRCodeGenerator() {
         secondary: secondaryColor,
         light: lightColor,
         dark: darkColor,
+        darkest: darkestColor,
       })
     }
 
@@ -271,22 +293,19 @@ export default function QRCodeGenerator() {
   }
 
   const getHeaderText = () => {
-    return qrType === "feedback" ? "Give your feedback" : "Visit our website"
+    return qrType === "feedback" ? "Rate & Review Us" : "Visit our website"
   }
 
   const getSubHeaderText = () => {
-    return qrType === "feedback" ? "We value your opinion!" : "Discover more about us"
+    return qrType === "feedback" ? "Share your experience on Google" : "Discover more about us"
   }
 
   const getFooterText = () => {
-    return qrType === "feedback" ? "Scan to share your thoughts" : "Scan to visit our website"
+    return qrType === "feedback" ? "Scan to leave a Google review" : "Scan to visit our website"
   }
 
   const getGradientColors = () => {
-    if (logoColors) {
-      return `bg-gradient-to-br from-[${logoColors.light}] to-[${logoColors.light}]`
-    }
-
+    // Always use neutral background regardless of logo colors
     return qrType === "feedback"
       ? "bg-gradient-to-br from-orange-50 to-red-100"
       : "bg-gradient-to-br from-blue-50 to-indigo-100"
@@ -295,8 +314,8 @@ export default function QRCodeGenerator() {
   const getBorderColors = () => {
     if (logoColors) {
       return {
-        outer: `border-[${logoColors.primary}]/30`,
-        inner: `border-[${logoColors.primary}]/40`,
+        outer: `border-[${logoColors.dark}]/30`, // Use darkest color
+        inner: `border-[${logoColors.dark}]/40`, // Use darkest color
       }
     }
 
@@ -308,8 +327,8 @@ export default function QRCodeGenerator() {
   const getCornerColors = () => {
     if (logoColors) {
       return {
-        topLeft: `bg-[${logoColors.primary}]/30`,
-        bottomRight: `bg-[${logoColors.secondary}]/30`,
+        topLeft: `bg-[${logoColors.dark}]/20`, // Use darkest color with lower opacity
+        bottomRight: `bg-[${logoColors.dark}]/20`, // Use darkest color with lower opacity
       }
     }
 
@@ -321,9 +340,9 @@ export default function QRCodeGenerator() {
   const getTextColors = () => {
     if (logoColors) {
       return {
-        primary: `text-[${logoColors.dark}]`,
-        secondary: `text-[${logoColors.primary}]`,
-        tertiary: `text-[${logoColors.secondary}]`,
+        primary: `text-[${logoColors.dark}]`, // Use darkest color for primary text
+        secondary: `text-[${logoColors.dark}]/80`, // Use darkest color with opacity for secondary text
+        tertiary: `text-[${logoColors.dark}]/60`, // Use darkest color with opacity for tertiary text
       }
     }
 
@@ -382,8 +401,8 @@ export default function QRCodeGenerator() {
     if (!logoColors) return {}
 
     return {
-      background: `linear-gradient(135deg, ${logoColors.light}E6, ${logoColors.light}CC)`,
-      borderColor: `${logoColors.primary}40`,
+      // Remove background color application - only apply border colors using darkest color
+      borderColor: `${logoColors.dark}40`,
     }
   }
 
@@ -392,12 +411,12 @@ export default function QRCodeGenerator() {
 
     return {
       topLeft: {
-        backgroundColor: `${logoColors.primary}40`,
-        background: `radial-gradient(circle, ${logoColors.primary}40, ${logoColors.primary}20)`,
+        backgroundColor: `${logoColors.dark}10`, // Use darkest color with very subtle opacity
+        background: `radial-gradient(circle, ${logoColors.dark}10, ${logoColors.dark}05)`,
       },
       bottomRight: {
-        backgroundColor: `${logoColors.secondary}40`,
-        background: `radial-gradient(circle, ${logoColors.secondary}40, ${logoColors.secondary}20)`,
+        backgroundColor: `${logoColors.dark}10`, // Use darkest color with very subtle opacity
+        background: `radial-gradient(circle, ${logoColors.dark}10, ${logoColors.dark}05)`,
       },
     }
   }
@@ -407,16 +426,16 @@ export default function QRCodeGenerator() {
 
     return {
       primary: {
-        color: logoColors.dark || logoColors.primary,
-        textShadow: `0 1px 2px ${logoColors.primary}20`,
+        color: logoColors.dark, // Use darkest color for primary text
+        textShadow: `0 1px 2px ${logoColors.dark}20`,
       },
       secondary: {
-        color: logoColors.primary,
-        opacity: 0.9,
+        color: logoColors.dark, // Use darkest color for secondary text
+        opacity: 0.8,
       },
       tertiary: {
-        color: logoColors.secondary || logoColors.primary,
-        opacity: 0.8,
+        color: logoColors.dark, // Use darkest color for tertiary text
+        opacity: 0.6,
       },
     }
   }
@@ -497,8 +516,8 @@ export default function QRCodeGenerator() {
               placeholder={
                 qrType === "feedback"
                   ? isMobile
-                    ? "Google Review URL"
-                    : "Enter Google Review URL or Feedback Link"
+                    ? "Google Reviews URL"
+                    : "Enter your Google Reviews URL"
                   : isMobile
                     ? "Business Website URL"
                     : "Enter Business Website URL"
@@ -577,7 +596,7 @@ export default function QRCodeGenerator() {
             className={`w-full ${responsive.button} bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200 font-bold`}
             style={
               logoColors
-                ? { background: `linear-gradient(to right, ${logoColors.primary}, ${logoColors.secondary})` }
+                ? { background: `linear-gradient(to right, ${logoColors.dark}, ${logoColors.dark}CC)` } // Use darkest color
                 : {}
             }
             disabled={!businessName || !url}
@@ -591,10 +610,8 @@ export default function QRCodeGenerator() {
                 ref={qrCodeRef}
                 className={`flex flex-col items-center justify-between ${responsive.qrContainer} rounded-xl shadow-2xl overflow-hidden relative`}
                 style={{
-                  border: logoColors ? `4px solid ${logoColors.primary}` : '4px solid #e5e7eb',
-                  background: qrType === "feedback"
-                    ? "linear-gradient(135deg, #fff7ed 0%, #ffe4e6 100%)"
-                    : "linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)",
+                  border: logoColors ? `4px solid ${logoColors.dark}` : '4px solid #e5e7eb', // Use darkest color for main border
+                  background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)", // Always use neutral white/light gray background
                   aspectRatio: isMobile ? "1 / 1.2" : "1 / 1.414",
                   width: "100%",
                   maxWidth: isMobile ? "100%" : isTablet ? "600px" : "800px",
@@ -607,7 +624,7 @@ export default function QRCodeGenerator() {
                   style={
                     logoColors
                       ? {
-                          borderColor: `${logoColors.primary}50`,
+                          borderColor: `${logoColors.dark}30`, // Use darkest color with opacity
                           borderWidth: isMobile ? "8px" : "16px",
                         }
                       : {}
@@ -618,7 +635,7 @@ export default function QRCodeGenerator() {
                   style={
                     logoColors
                       ? {
-                          borderColor: `${logoColors.primary}70`,
+                          borderColor: `${logoColors.dark}50`, // Use darkest color with opacity
                           borderWidth: "2px",
                         }
                       : {}
@@ -644,6 +661,15 @@ export default function QRCodeGenerator() {
                       />
                     </div>
                   )}
+
+                  {/* Google Icon and Stars for Feedback */}
+                  {qrType === "feedback" && (
+                    <div className={`flex items-center justify-center gap-3 ${isMobile ? "mb-3" : "mb-4"}`}>
+                      <GoogleIcon className={isMobile ? "w-8 h-8" : "w-10 h-10"} />
+                      <StarRating rating={5} className="scale-110" />
+                    </div>
+                  )}
+
                   <h2
                     className={`${responsive.qrTitle} font-bold ${isMobile ? "mb-2" : "mb-4"} leading-tight`}
                     style={textStyles.primary}
@@ -678,6 +704,18 @@ export default function QRCodeGenerator() {
                   >
                     {url}
                   </p>
+
+                  {/* Additional Google Reviews indicator for feedback */}
+                  {qrType === "feedback" && (
+                    <div className={`flex items-center justify-center gap-2 ${isMobile ? "mt-2 mb-2" : "mt-3 mb-3"}`}>
+                      <GoogleIcon className="w-4 h-4" />
+                      <span className={`text-sm font-medium`} style={textStyles.tertiary}>
+                        Google Reviews
+                      </span>
+                      <StarRating rating={5} className="scale-75" />
+                    </div>
+                  )}
+
                   <p
                     className={`${responsive.qrFooter} ${isMobile ? "mt-3" : "mt-6"} opacity-90 font-medium`}
                     style={textStyles.tertiary}
@@ -692,7 +730,7 @@ export default function QRCodeGenerator() {
                 className={`w-full ${responsive.button} bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-200 mt-8 font-bold`}
                 style={
                   logoColors
-                    ? { background: `linear-gradient(to right, ${logoColors.secondary}, ${logoColors.primary})` }
+                    ? { background: `linear-gradient(to right, ${logoColors.dark}, ${logoColors.dark}AA)` } // Use darkest color
                     : {}
                 }
               >
