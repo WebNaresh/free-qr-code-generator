@@ -3,8 +3,7 @@ import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { usePathname } from 'next/navigation'
-
+import { Analytics } from "@vercel/analytics/next"
 export const metadata: Metadata = {
   title: 'Free QR Code Generator | Create Custom QR Codes for Business, Reviews & Websites',
   description: 'Create professional QR codes for your business, Google reviews, websites, and more. Free, customizable, and easy to use QR code generator with advanced features. No signup required.',
@@ -110,12 +109,15 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <div className="min-h-screen flex flex-col">
+          <Analytics/>
           <Navbar />
+
           <main className="flex-grow">
             {children}
           </main>
           <Footer />
         </div>
+        <Analytics />
       </body>
     </html>
   )
