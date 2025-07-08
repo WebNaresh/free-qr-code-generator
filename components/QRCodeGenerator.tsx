@@ -47,7 +47,19 @@ export default function QRCodeGenerator() {
     secondary: string
     light: string
     dark: string
+    border?: string
   } | null>(null)
+  const [detectedColors, setDetectedColors] = useState<Array<{
+    hex: string
+    count: number
+    r: number
+    g: number
+    b: number
+    brightness: number
+  }>>([])
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0)
+  const [selectedTextColorIndex, setSelectedTextColorIndex] = useState<number>(0)
+  const [selectedBorderColorIndex, setSelectedBorderColorIndex] = useState<number>(0)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   // Responsive detection
@@ -217,12 +229,19 @@ export default function QRCodeGenerator() {
         lightColor = rgbToHex(lightR, lightG, lightB)
       }
 
+      // Store all detected colors for user selection
+      setDetectedColors(distinctColors)
+      setSelectedColorIndex(0) // Default to first (most frequent) color
+      setSelectedTextColorIndex(0) // Default to darkest color for text
+      setSelectedBorderColorIndex(0) // Default to first color for border
+
       // Set the extracted colors
       setLogoColors({
         primary: primaryColor,
         secondary: secondaryColor,
         light: lightColor,
         dark: darkColor,
+        border: primaryColor, // Default border color
       })
 
       console.log("Extracted colors:", {
@@ -231,10 +250,87 @@ export default function QRCodeGenerator() {
         light: lightColor,
         dark: darkColor,
         darkest: darkestColor,
+        allColors: distinctColors,
       })
     }
 
     img.src = imageUrl
+  }
+
+
+
+  // Individual color selection functions
+  const applySelectedColor = (colorIndex: number) => {
+    setSelectedColorIndex(colorIndex)
+    // Update colors immediately with new selection
+    if (detectedColors[colorIndex]) {
+      const newPrimaryColor = detectedColors[colorIndex].hex
+      const currentTextColor = detectedColors[selectedTextColorIndex]?.hex || detectedColors[0]?.hex
+      const currentBorderColor = detectedColors[selectedBorderColorIndex]?.hex || detectedColors[0]?.hex
+
+      updateColorsWithSelection(newPrimaryColor, currentTextColor, currentBorderColor)
+    }
+  }
+
+  const applySelectedTextColor = (colorIndex: number) => {
+    setSelectedTextColorIndex(colorIndex)
+    // Update colors immediately with new selection
+    if (detectedColors[colorIndex]) {
+      const currentPrimaryColor = detectedColors[selectedColorIndex]?.hex || detectedColors[0]?.hex
+      const newTextColor = detectedColors[colorIndex].hex
+      const currentBorderColor = detectedColors[selectedBorderColorIndex]?.hex || detectedColors[0]?.hex
+
+      updateColorsWithSelection(currentPrimaryColor, newTextColor, currentBorderColor)
+    }
+  }
+
+  const applySelectedBorderColor = (colorIndex: number) => {
+    setSelectedBorderColorIndex(colorIndex)
+    // Update colors immediately with new selection
+    if (detectedColors[colorIndex]) {
+      const currentPrimaryColor = detectedColors[selectedColorIndex]?.hex || detectedColors[0]?.hex
+      const currentTextColor = detectedColors[selectedTextColorIndex]?.hex || detectedColors[0]?.hex
+      const newBorderColor = detectedColors[colorIndex].hex
+
+      updateColorsWithSelection(currentPrimaryColor, currentTextColor, newBorderColor)
+    }
+  }
+
+  // Helper function to update colors with specific selections
+  const updateColorsWithSelection = (primaryColor: string, textColor: string, borderColor: string) => {
+    // Create light variant from primary color
+    const primaryRgb = hexToRgb(primaryColor)
+    let lightColor = "#FFFFFF"
+
+    if (primaryRgb) {
+      const lightR = Math.min(255, primaryRgb.r + 150)
+      const lightG = Math.min(255, primaryRgb.g + 150)
+      const lightB = Math.min(255, primaryRgb.b + 150)
+      lightColor = rgbToHex(lightR, lightG, lightB)
+    }
+
+    // Find a good secondary color
+    const secondaryColor = detectedColors.find((c) => {
+      if (c.hex === primaryColor) return false
+      const primaryRgb = hexToRgb(primaryColor)
+      if (!primaryRgb) return false
+
+      const dr = Math.abs(primaryRgb.r - c.r)
+      const dg = Math.abs(primaryRgb.g - c.g)
+      const db = Math.abs(primaryRgb.b - c.b)
+      const colorDistance = Math.sqrt(dr * dr + dg * dg + db * db)
+
+      return colorDistance > 100
+    })?.hex || detectedColors[1]?.hex || primaryColor
+
+    // Update logo colors with selected colors
+    setLogoColors({
+      primary: primaryColor,
+      secondary: secondaryColor,
+      light: lightColor,
+      dark: textColor,
+      border: borderColor,
+    })
   }
 
   const generateQRCode = async () => {
@@ -273,6 +369,10 @@ export default function QRCodeGenerator() {
   const removeImage = () => {
     setUploadedImage(null)
     setLogoColors(null)
+    setDetectedColors([])
+    setSelectedColorIndex(0)
+    setSelectedTextColorIndex(0)
+    setSelectedBorderColorIndex(0)
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
@@ -313,9 +413,10 @@ export default function QRCodeGenerator() {
 
   const getBorderColors = () => {
     if (logoColors) {
+      const borderColor = logoColors.border || logoColors.dark
       return {
-        outer: `border-[${logoColors.dark}]/30`, // Use darkest color
-        inner: `border-[${logoColors.dark}]/40`, // Use darkest color
+        outer: `border-[${borderColor}]/30`, // Use selected border color
+        inner: `border-[${borderColor}]/40`, // Use selected border color
       }
     }
 
@@ -572,22 +673,120 @@ export default function QRCodeGenerator() {
             )}
           </div>
 
-          {uploadedImage && logoColors && (
-            <div className="flex justify-center items-center gap-6 mt-6 p-4 bg-gray-50 rounded-lg">
-              <div className="flex flex-col items-center">
-                <div
-                  className="w-10 h-10 rounded-full border border-gray-200 shadow-sm mb-2"
-                  style={{ backgroundColor: logoColors.primary }}
-                />
-                <span className={`${responsive.colorLabel} font-medium`}>Primary</span>
+          {uploadedImage && detectedColors.length > 0 && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              {/* Primary Color Selection */}
+              <div className="mb-6">
+                <label className={`${responsive.colorLabel} font-semibold block mb-3 text-center`}>
+                  Choose Primary Color:
+                </label>
+                <div className="flex justify-center items-center gap-3 flex-wrap">
+                  {detectedColors.slice(0, 6).map((color, index) => (
+                    <div key={index} className="flex flex-col items-center">
+                      <button
+                        onClick={() => applySelectedColor(index)}
+                        className={`w-12 h-12 rounded-full border-2 shadow-sm mb-2 transition-all duration-200 hover:scale-110 ${
+                          selectedColorIndex === index
+                            ? 'border-blue-500 ring-2 ring-blue-200'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        style={{ backgroundColor: color.hex }}
+                        title={`Primary Color ${index + 1}: ${color.hex}`}
+                      />
+                      <span className={`${responsive.colorLabel} text-xs font-medium ${
+                        selectedColorIndex === index ? 'text-blue-600' : 'text-gray-600'
+                      }`}>
+                        {index === 0 ? 'Most Used' : `Option ${index + 1}`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col items-center">
-                <div
-                  className="w-10 h-10 rounded-full border border-gray-200 shadow-sm mb-2"
-                  style={{ backgroundColor: logoColors.secondary }}
-                />
-                <span className={`${responsive.colorLabel} font-medium`}>Secondary</span>
+
+              {/* Text Color Selection */}
+              <div className="mb-6">
+                <label className={`${responsive.colorLabel} font-semibold block mb-3 text-center`}>
+                  Choose Text Color:
+                </label>
+                <div className="flex justify-center items-center gap-3 flex-wrap">
+                  {detectedColors.slice(0, 6).map((color, index) => (
+                    <div key={index} className="flex flex-col items-center">
+                      <button
+                        onClick={() => applySelectedTextColor(index)}
+                        className={`w-10 h-10 rounded-full border-2 shadow-sm mb-2 transition-all duration-200 hover:scale-110 ${
+                          selectedTextColorIndex === index
+                            ? 'border-green-500 ring-2 ring-green-200'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        style={{ backgroundColor: color.hex }}
+                        title={`Text Color ${index + 1}: ${color.hex}`}
+                      />
+                      <span className={`${responsive.colorLabel} text-xs font-medium ${
+                        selectedTextColorIndex === index ? 'text-green-600' : 'text-gray-600'
+                      }`}>
+                        Text
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* Border Color Selection */}
+              <div className="mb-4">
+                <label className={`${responsive.colorLabel} font-semibold block mb-3 text-center`}>
+                  Choose Border Color:
+                </label>
+                <div className="flex justify-center items-center gap-3 flex-wrap">
+                  {detectedColors.slice(0, 6).map((color, index) => (
+                    <div key={index} className="flex flex-col items-center">
+                      <button
+                        onClick={() => applySelectedBorderColor(index)}
+                        className={`w-10 h-10 rounded-full border-2 shadow-sm mb-2 transition-all duration-200 hover:scale-110 ${
+                          selectedBorderColorIndex === index
+                            ? 'border-purple-500 ring-2 ring-purple-200'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        style={{ backgroundColor: color.hex }}
+                        title={`Border Color ${index + 1}: ${color.hex}`}
+                      />
+                      <span className={`${responsive.colorLabel} text-xs font-medium ${
+                        selectedBorderColorIndex === index ? 'text-purple-600' : 'text-gray-600'
+                      }`}>
+                        Border
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Color Summary */}
+              {logoColors && (
+                <div className="mt-4 pt-3 border-t border-gray-200">
+                  <div className="flex justify-center items-center gap-4 text-xs text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-4 h-4 rounded border border-gray-300"
+                        style={{ backgroundColor: logoColors.primary }}
+                      />
+                      <span>Primary</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-4 h-4 rounded border border-gray-300"
+                        style={{ backgroundColor: logoColors.dark }}
+                      />
+                      <span>Text</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-4 h-4 rounded border border-gray-300"
+                        style={{ backgroundColor: logoColors.border || logoColors.dark }}
+                      />
+                      <span>Border</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
