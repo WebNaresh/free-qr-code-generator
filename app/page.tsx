@@ -1,4 +1,6 @@
 import QRCodeGenerator from "@/components/QRCodeGenerator"
+import { TopBannerAd, ContentAd, ResponsiveAd } from "@/components/AdSense"
+import TrustIndicators from "@/components/TrustIndicators"
 
 export default function Home() {
   return (
@@ -53,12 +55,9 @@ export default function Home() {
           </ul>
         </section>
 
-        {/* Ad Space - Top Banner */}
+        {/* Top Banner Advertisement */}
         <section className="mb-12">
-          <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <p className="text-gray-500 text-sm">Advertisement Space - 728x90 Banner</p>
-            <div className="h-20 bg-gray-200 rounded mt-2"></div>
-          </div>
+          <TopBannerAd />
         </section>
 
         {/* Popular Use Cases */}
@@ -92,12 +91,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Ad Space - Middle Rectangle */}
+        {/* Content Advertisement */}
         <section className="mb-12">
-          <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-            <p className="text-gray-500 text-sm">Advertisement Space - 300x250 Rectangle</p>
-            <div className="h-32 bg-gray-200 rounded mt-2 mx-auto max-w-xs"></div>
-          </div>
+          <ContentAd />
         </section>
 
         {/* Trust & Support */}
@@ -114,6 +110,9 @@ export default function Home() {
           <a href="#" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Get Started</a>
         </section>
       </div>
+
+      {/* Trust Indicators */}
+      <TrustIndicators />
     </main>
   )
 }

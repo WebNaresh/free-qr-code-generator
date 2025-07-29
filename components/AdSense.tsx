@@ -61,40 +61,81 @@ export default function AdSense({
 // Predefined ad components for common placements
 export function TopBannerAd({ className = '' }: { className?: string }) {
   return (
-    <AdSense 
-      adSlot="1234567890" 
-      adFormat="banner" 
-      className={`mb-8 ${className}`}
-    />
+    <div className={`ad-container ${className}`}>
+      <div className="text-xs text-gray-400 text-center mb-1">Advertisement</div>
+      <AdSense
+        adSlot="9876543210"
+        adFormat="banner"
+        className="mb-8"
+      />
+    </div>
   )
 }
 
 export function SidebarAd({ className = '' }: { className?: string }) {
   return (
-    <AdSense 
-      adSlot="2345678901" 
-      adFormat="rectangle" 
-      className={`mb-6 ${className}`}
-    />
+    <div className={`ad-container ${className}`}>
+      <div className="text-xs text-gray-400 text-center mb-1">Advertisement</div>
+      <AdSense
+        adSlot="8765432109"
+        adFormat="rectangle"
+        className="mb-6"
+      />
+    </div>
   )
 }
 
 export function ContentAd({ className = '' }: { className?: string }) {
   return (
-    <AdSense 
-      adSlot="3456789012" 
-      adFormat="rectangle" 
-      className={`my-8 ${className}`}
-    />
+    <div className={`ad-container ${className}`}>
+      <div className="text-xs text-gray-400 text-center mb-1">Advertisement</div>
+      <AdSense
+        adSlot="7654321098"
+        adFormat="rectangle"
+        className="my-8"
+      />
+    </div>
   )
 }
 
 export function BottomBannerAd({ className = '' }: { className?: string }) {
   return (
-    <AdSense 
-      adSlot="4567890123" 
-      adFormat="leaderboard" 
-      className={`mt-8 ${className}`}
-    />
+    <div className={`ad-container ${className}`}>
+      <div className="text-xs text-gray-400 text-center mb-1">Advertisement</div>
+      <AdSense
+        adSlot="6543210987"
+        adFormat="leaderboard"
+        className="mt-8"
+      />
+    </div>
+  )
+}
+
+// Responsive ad component that adapts to screen size
+export function ResponsiveAd({ className = '' }: { className?: string }) {
+  return (
+    <div className={`ad-container ${className}`}>
+      <div className="text-xs text-gray-400 text-center mb-1">Advertisement</div>
+      <AdSense
+        adSlot="5432109876"
+        adFormat="auto"
+        fullWidthResponsive={true}
+        className="my-6"
+      />
+    </div>
+  )
+}
+
+// In-article ad component
+export function InArticleAd({ className = '' }: { className?: string }) {
+  return (
+    <div className={`ad-container my-8 ${className}`}>
+      <div className="text-xs text-gray-400 text-center mb-1">Advertisement</div>
+      <AdSense
+        adSlot="4321098765"
+        adFormat="auto"
+        fullWidthResponsive={true}
+      />
+    </div>
   )
 }

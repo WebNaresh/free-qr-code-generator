@@ -3,6 +3,7 @@ import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import CookieConsent from '@/components/CookieConsent'
 import { Analytics } from "@vercel/analytics/next"
 export const metadata: Metadata = {
   title: 'Free QR Code Generator | Create Custom QR Codes for Business, Reviews & Websites',
@@ -116,6 +117,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <CookieConsent />
         </div>
         <Analytics />
       </body>

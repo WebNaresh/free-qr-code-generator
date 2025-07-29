@@ -60,6 +60,7 @@ export default function QRCodeGenerator() {
   const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0)
   const [selectedTextColorIndex, setSelectedTextColorIndex] = useState<number>(0)
   const [selectedBorderColorIndex, setSelectedBorderColorIndex] = useState<number>(0)
+  const [logoSize, setLogoSize] = useState<'small' | 'medium' | 'large' | 'extra-large' | 'jumbo'>('medium')
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   // Responsive detection
@@ -452,6 +453,41 @@ export default function QRCodeGenerator() {
       : { primary: "text-indigo-800", secondary: "text-indigo-600", tertiary: "text-indigo-500" }
   }
 
+  // Function to get logo size classes based on selection and device
+  const getLogoSizeClasses = () => {
+    const sizeMap = {
+      small: {
+        mobile: "w-12 h-12",
+        tablet: "w-14 h-14",
+        desktop: "w-16 h-16"
+      },
+      medium: {
+        mobile: "w-16 h-16",
+        tablet: "w-20 h-20",
+        desktop: "w-24 h-24"
+      },
+      large: {
+        mobile: "w-20 h-20",
+        tablet: "w-24 h-24",
+        desktop: "w-28 h-28"
+      },
+      "extra-large": {
+        mobile: "w-24 h-24",
+        tablet: "w-28 h-28",
+        desktop: "w-32 h-32"
+      },
+      jumbo: {
+        mobile: "w-28 h-28",
+        tablet: "w-32 h-32",
+        desktop: "w-36 h-36"
+      }
+    }
+
+    if (isMobile) return sizeMap[logoSize].mobile
+    if (isTablet) return sizeMap[logoSize].tablet
+    return sizeMap[logoSize].desktop
+  }
+
   // Enhanced responsive classes with larger font sizes
   const getResponsiveClasses = () => {
     return {
@@ -476,8 +512,8 @@ export default function QRCodeGenerator() {
       qrUrl: isMobile ? "text-sm" : isTablet ? "text-base" : "text-lg xl:text-xl",
       // Footer text - clear
       qrFooter: isMobile ? "text-sm" : isTablet ? "text-base" : "text-lg",
-      // Logo sizes - proportionally larger
-      logoSize: isMobile ? "w-16 h-16" : isTablet ? "w-20 h-20" : "w-24 h-24",
+      // Logo sizes - proportionally larger and dynamic
+      logoSize: getLogoSizeClasses(),
       // QR code sizes
       qrCodeSize: isMobile ? "max-w-56" : isTablet ? "max-w-72" : "max-w-80",
       // Spacing
@@ -787,6 +823,51 @@ export default function QRCodeGenerator() {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Logo Size Selection */}
+          {uploadedImage && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <label className={`${responsive.colorLabel} font-semibold block mb-3 text-center`}>
+                Choose Logo Size:
+              </label>
+              <div className="flex justify-center items-center gap-3 flex-wrap">
+                {(['small', 'medium', 'large', 'extra-large', 'jumbo'] as const).map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setLogoSize(size)}
+                    className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all duration-200 hover:scale-105 ${
+                      logoSize === size
+                        ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="mb-2 flex items-center justify-center bg-gray-100 rounded-full">
+                      <img
+                        src={uploadedImage}
+                        alt="Logo preview"
+                        className={`object-contain rounded-full ${
+                          size === 'small' ? 'w-6 h-6' :
+                          size === 'medium' ? 'w-8 h-8' :
+                          size === 'large' ? 'w-10 h-10' :
+                          size === 'extra-large' ? 'w-12 h-12' : 'w-14 h-14'
+                        }`}
+                      />
+                    </div>
+                    <span className={`text-xs font-medium ${
+                      logoSize === size ? 'text-blue-600' : 'text-gray-600'
+                    }`}>
+                      {size === 'extra-large' ? 'XL' : size === 'jumbo' ? 'Jumbo' : size.charAt(0).toUpperCase() + size.slice(1)}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 text-center">
+                <span className="text-xs text-gray-500">
+                  Preview shows relative sizes. Actual size adapts to your device.
+                </span>
+              </div>
             </div>
           )}
 
