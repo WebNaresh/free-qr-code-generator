@@ -87,6 +87,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="google-adsense-account" content="ca-pub-4895071519734738"></meta>
+        <meta name="google-site-verification" content="rK-V-bkRiNac_snXDliif7WyssvpyOy_tNNoG3yElGk" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-E6JPKTRP50"
           strategy="afterInteractive"
