@@ -4,11 +4,12 @@ import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
 import QRCode from "qrcode"
-import html2canvas from "html2canvas"
+import * as htmlToImage from "html-to-image"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Download, Star, Globe, Upload, X, Smartphone, Tablet, Monitor } from "lucide-react"
+import { toast } from "sonner"
 
 // Google Icon Component
 const GoogleIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
@@ -61,7 +62,10 @@ export default function QRCodeGenerator() {
   const [selectedTextColorIndex, setSelectedTextColorIndex] = useState<number>(0)
   const [selectedBorderColorIndex, setSelectedBorderColorIndex] = useState<number>(0)
   const [logoSize, setLogoSize] = useState<'small' | 'medium' | 'large' | 'extra-large' | 'jumbo'>('medium')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+
 
   // Responsive detection
   useEffect(() => {
@@ -335,7 +339,26 @@ export default function QRCodeGenerator() {
   }
 
   const generateQRCode = async () => {
+    if (!businessName.trim() || !url.trim()) {
+      toast.warning("Please fill in both business name and URL to generate your QR code")
+      return
+    }
+
+    // Validate URL format
     try {
+      new URL(url)
+    } catch {
+      toast.error("Please enter a valid URL (e.g., https://www.example.com)")
+      return
+    }
+
+    setIsGenerating(true)
+    toast.info("Creating your custom QR code...")
+
+    try {
+      // Add a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500))
+
       const qrSize = isMobile ? 600 : isTablet ? 800 : 1000
       const response = await QRCode.toDataURL(url, {
         errorCorrectionLevel: "H",
@@ -349,22 +372,46 @@ export default function QRCodeGenerator() {
         },
       })
       setQrCode(response)
+      toast.success("Your QR code is ready for download!")
     } catch (error) {
       console.error("Error generating QR code:", error)
+      toast.error("There was an error generating your QR code. Please try again.")
+    } finally {
+      setIsGenerating(false)
     }
   }
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const imageUrl = e.target?.result as string
-        setUploadedImage(imageUrl)
-        extractColorsFromImage(imageUrl)
-      }
-      reader.readAsDataURL(file)
+    if (!file) return
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml', 'image/webp']
+    if (!validTypes.includes(file.type)) {
+      toast.error("Please upload a valid image file (JPG, PNG, SVG, or WebP)")
+      return
     }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      toast.error("Please upload an image smaller than 5MB")
+      return
+    }
+
+    toast.info("Processing image and analyzing colors...")
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const imageUrl = e.target?.result as string
+      setUploadedImage(imageUrl)
+      extractColorsFromImage(imageUrl)
+      toast.success("Image uploaded and colors extracted successfully!")
+    }
+    reader.onerror = () => {
+      toast.error("There was an error reading your image file")
+    }
+    reader.readAsDataURL(file)
   }
 
   const removeImage = () => {
@@ -380,16 +427,194 @@ export default function QRCodeGenerator() {
   }
 
   const downloadQRCodePage = async () => {
-    if (qrCodeRef.current) {
-      const scale = isMobile ? 1.5 : isTablet ? 2 : 2.5
-      const canvas = await html2canvas(qrCodeRef.current, { scale })
-      const image = canvas.toDataURL("image/png")
+    if (!qrCodeRef.current || !qrCode) {
+      toast.error("QR code not found. Please generate a QR code first.")
+      return
+    }
+
+    setIsDownloading(true)
+    toast.info("Creating high-resolution image...")
+
+    try {
+      // Option 1: Try to capture the existing QR code element directly
+      if (qrCodeRef.current) {
+        try {
+          const dataUrl = await htmlToImage.toPng(qrCodeRef.current, {
+            quality: 1,
+            backgroundColor: '#ffffff',
+            pixelRatio: 2,
+            style: {
+              transform: 'scale(1)',
+              transformOrigin: 'top left'
+            }
+          })
+
+          // Download the image
+          const link = document.createElement("a")
+          link.href = dataUrl
+          link.download = `${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode.png`
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+
+          toast.success("Your QR code has been saved to your device")
+          return
+        } catch (directCaptureError) {
+          console.log("Direct capture failed, trying custom container:", directCaptureError)
+        }
+      }
+
+      // Option 2: Create a custom container for better control
+      const tempContainer = document.createElement('div')
+      tempContainer.style.position = 'absolute'
+      tempContainer.style.left = '-9999px'
+      tempContainer.style.top = '-9999px'
+      tempContainer.style.width = '800px'
+      tempContainer.style.height = '1000px'
+      tempContainer.style.backgroundColor = '#ffffff'
+      tempContainer.style.padding = '40px'
+      tempContainer.style.fontFamily = 'system-ui, -apple-system, sans-serif'
+      tempContainer.style.display = 'flex'
+      tempContainer.style.flexDirection = 'column'
+      tempContainer.style.alignItems = 'center'
+      tempContainer.style.justifyContent = 'space-between'
+
+      // Get current colors
+      const primaryColor = logoColors?.dark || '#1f2937'
+      const secondaryColor = logoColors?.primary || '#6b7280'
+
+      // Build the content HTML with all dynamic content
+      tempContainer.innerHTML = `
+        <div style="text-align: center; margin-bottom: 30px;">
+          ${uploadedImage ? `
+            <div style="margin-bottom: 20px;">
+              <img src="${uploadedImage}" alt="Business logo" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px;" />
+            </div>
+          ` : ''}
+
+          ${qrType === 'feedback' ? `
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px;">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" style="color: ${primaryColor};">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              <div style="display: flex; gap: 2px;">
+                ${Array(5).fill(0).map(() => `<svg width="20" height="20" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <h2 style="font-size: 28px; font-weight: bold; color: ${primaryColor}; margin: 0 0 12px 0; line-height: 1.2;">
+            ${getHeaderText()}
+          </h2>
+          <p style="font-size: 18px; color: ${secondaryColor}; margin: 0 0 20px 0; line-height: 1.4;">
+            ${getSubHeaderText()}
+          </p>
+        </div>
+
+        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border: 2px solid #e5e7eb;">
+          <img src="${qrCode}" alt="QR Code" style="width: 300px; height: 300px; display: block;" />
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+          <h3 style="font-size: 24px; font-weight: bold; color: ${primaryColor}; margin: 0 0 8px 0;">
+            ${businessName.trim()}
+          </h3>
+          <p style="font-size: 16px; color: ${secondaryColor}; margin: 0 0 12px 0;">
+            ${url}
+          </p>
+          ${qrType === 'feedback' ? `
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285F4">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              <span style="font-size: 14px; color: ${secondaryColor};">Google Reviews</span>
+              <div style="display: flex; gap: 1px;">
+                ${Array(5).fill(0).map(() => `<svg width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
+              </div>
+            </div>
+          ` : ''}
+          <p style="font-size: 14px; color: ${secondaryColor}; margin: 0;">
+            ${qrType === 'feedback' ? 'Scan to leave a Google review' : 'Scan with your phone camera'}
+          </p>
+        </div>
+      `
+
+      document.body.appendChild(tempContainer)
+
+      // Wait for images to load
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // Generate the image using html-to-image
+      const dataUrl = await htmlToImage.toPng(tempContainer, {
+        quality: 1,
+        backgroundColor: '#ffffff',
+        width: 800,
+        height: 1000,
+        pixelRatio: 2,
+        style: {
+          transform: 'scale(1)',
+          transformOrigin: 'top left'
+        }
+      })
+
+      // Clean up
+      document.body.removeChild(tempContainer)
+
+      // Download the image
       const link = document.createElement("a")
-      link.href = image
+      link.href = dataUrl
       link.download = `${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode.png`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+
+      toast.success("Your QR code has been saved to your device")
+    } catch (error) {
+      console.error("Error downloading QR code:", error)
+      toast.error("There was an error downloading your QR code. Trying simple version...")
+
+      // Fallback: download just the QR code
+      try {
+        const link = document.createElement("a")
+        link.href = qrCode
+        link.download = `${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode_simple.png`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        toast.success("Simple QR code downloaded successfully")
+      } catch (fallbackError) {
+        console.error("Fallback download failed:", fallbackError)
+        toast.error("Download failed. Please try right-clicking the QR code and saving it manually.")
+      }
+    } finally {
+      setIsDownloading(false)
+    }
+  }
+
+  // Simple QR code download function
+  const downloadSimpleQR = () => {
+    if (!qrCode) {
+      toast.error("Please generate a QR code first")
+      return
+    }
+
+    try {
+      const link = document.createElement("a")
+      link.href = qrCode
+      link.download = `${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode.png`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      toast.success("QR code downloaded successfully")
+    } catch (error) {
+      console.error("Simple download failed:", error)
+      toast.error("Download failed. Please try right-clicking the QR code and saving it manually.")
     }
   }
 
@@ -1005,18 +1230,35 @@ export default function QRCodeGenerator() {
                 </div>
               </div>
 
-              <Button
-                onClick={downloadQRCodePage}
-                className={`w-full ${responsive.button} bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-200 mt-8 font-bold`}
-                style={
-                  logoColors
-                    ? { background: `linear-gradient(to right, ${logoColors.dark}, ${logoColors.dark}AA)` } // Use darkest color
-                    : {}
-                }
-              >
-                <Download className="mr-4 h-6 w-6" />
-                Download QR Code
-              </Button>
+              <div className="flex flex-col gap-3 mt-8">
+                <Button
+                  onClick={downloadQRCodePage}
+                  disabled={isDownloading}
+                  className={`w-full ${responsive.button} bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-200 font-bold`}
+                  style={
+                    logoColors
+                      ? { background: `linear-gradient(to right, ${logoColors.dark}, ${logoColors.dark}AA)` } // Use darkest color
+                      : {}
+                  }
+                >
+                  <Download className="mr-4 h-6 w-6" />
+                  {isDownloading ? "Creating Image..." : "Download Full QR Code"}
+                </Button>
+
+                <Button
+                  onClick={downloadSimpleQR}
+                  variant="outline"
+                  className={`w-full ${responsive.button} border-2 hover:bg-gray-50 transition-all duration-200`}
+                  style={
+                    logoColors
+                      ? { borderColor: logoColors.dark, color: logoColors.dark }
+                      : {}
+                  }
+                >
+                  <Download className="mr-4 h-5 w-5" />
+                  Download Simple QR Code
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>

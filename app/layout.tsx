@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 import StructuredData from "@/components/StructuredData";
+import { Toaster } from "@/components/ui/sonner";
 
 import { Analytics } from "@vercel/analytics/next";
 export const metadata: Metadata = {
@@ -204,7 +205,7 @@ export default function RootLayout({
             <main className="flex-grow">{children}</main>
             <Footer />
           </div>
-
+          <Toaster />
         <Analytics />
       </body>
     </html>
