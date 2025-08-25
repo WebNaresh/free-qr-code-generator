@@ -49,7 +49,6 @@ export default function PrivacyPolicy() {
             <li>Usage data and analytics (pages visited, time spent, clicks)</li>
             <li>Device and browser information (browser type, operating system)</li>
             <li>IP address and general location data</li>
-            <li>Cookies and similar tracking technologies</li>
             <li>Referral URLs and search terms</li>
           </ul>
 
@@ -98,24 +97,22 @@ export default function PrivacyPolicy() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">4. Cookies and Tracking Technologies</h2>
+          <h2 className="text-2xl font-semibold mb-4">4. Data Collection and Analytics</h2>
           <p className="mb-4">
-            We use cookies and similar tracking technologies to enhance your experience on our website.
+            We collect minimal data to improve our service and understand how users interact with our QR code generator.
           </p>
 
-          <h3 className="text-lg font-semibold mb-2">4.1 Types of Cookies We Use</h3>
+          <h3 className="text-lg font-semibold mb-2">4.1 Analytics and Advertising</h3>
           <ul className="list-disc pl-6 space-y-2 mb-4">
-            <li><strong>Essential Cookies:</strong> Required for the website to function properly</li>
-            <li><strong>Analytics Cookies:</strong> Help us understand how visitors use our website</li>
-            <li><strong>Advertising Cookies:</strong> Used to deliver relevant advertisements</li>
-            <li><strong>Preference Cookies:</strong> Remember your settings and preferences</li>
+            <li><strong>Google Analytics:</strong> We use Google Analytics to understand website usage patterns</li>
+            <li><strong>Google AdSense:</strong> We display relevant advertisements to support our free service</li>
+            <li><strong>No Tracking Cookies:</strong> We do not use tracking cookies or store personal data locally</li>
           </ul>
 
-          <h3 className="text-lg font-semibold mb-2">4.2 Managing Cookies</h3>
+          <h3 className="text-lg font-semibold mb-2">4.2 Data Minimization</h3>
           <p className="mb-4">
-            You can control cookies through your browser settings. However, disabling certain cookies may affect
-            the functionality of our website. For more information about cookies and how to manage them,
-            visit <a href="https://www.allaboutcookies.org" className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">www.allaboutcookies.org</a>.
+            We believe in data minimization. Your QR code content is processed locally in your browser and is not stored on our servers.
+            We only collect anonymous usage statistics to improve our service.
           </p>
         </section>
 
@@ -192,9 +189,9 @@ export default function PrivacyPolicy() {
 
           <h3 className="text-lg font-semibold mb-2">7.2 Advertising and Marketing Rights</h3>
           <ul className="list-disc pl-6 space-y-2 mb-4">
-            <li>Opt-out of personalized advertising</li>
-            <li>Control cookie preferences</li>
+            <li>Opt-out of personalized advertising through Google Ad Settings</li>
             <li>Request information about data used for advertising</li>
+            <li>Block ads using browser ad blockers</li>
           </ul>
 
           <h3 className="text-lg font-semibold mb-2">7.3 How to Exercise Your Rights</h3>

@@ -3,7 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CookieConsent from "@/components/CookieConsent";
+
 import StructuredData from "@/components/StructuredData";
 
 import { Analytics } from "@vercel/analytics/next";
@@ -166,8 +166,10 @@ export default function RootLayout({
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-        <meta name="google-adsense-account" content="ca-pub-4895071519734738"></meta>
         <meta name="google-site-verification" content="rK-V-bkRiNac_snXDliif7WyssvpyOy_tNNoG3yElGk" />
+        <meta name="google-adsense-account" content="ca-pub-4895071519734738" />
+
+        {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-E6JPKTRP50"
           strategy="afterInteractive"
@@ -180,6 +182,8 @@ export default function RootLayout({
             gtag('config', 'G-E6JPKTRP50');
           `}
         </Script>
+
+        {/* Google AdSense */}
         {showAds && (
           <Script
             async
@@ -188,6 +192,7 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
+
         <StructuredData />
       </head>
       <body suppressHydrationWarning>
@@ -198,7 +203,6 @@ export default function RootLayout({
 
             <main className="flex-grow">{children}</main>
             <Footer />
-            <CookieConsent />
           </div>
 
         <Analytics />
