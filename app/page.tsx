@@ -1,4 +1,5 @@
 import QRCodeGenerator from "@/components/QRCodeGenerator"
+import FeedbackForm from "@/components/FeedbackForm"
 import { TopBannerAd, ContentAd, ResponsiveAd } from "@/components/AdSense"
 import TrustIndicators from "@/components/TrustIndicators"
 
@@ -44,6 +45,11 @@ export default function Home() {
         {/* QR Code Generator */}
         <section id="qr-generator" className="mb-12 sm:mb-16 lg:mb-20">
           <QRCodeGenerator />
+        </section>
+
+        {/* Feedback Form */}
+        <section id="feedback" className="mb-12 sm:mb-16 lg:mb-20 px-4">
+          <FeedbackForm />
         </section>
 
         {/* How It Works */}

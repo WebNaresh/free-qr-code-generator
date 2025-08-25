@@ -39,6 +39,7 @@ export default function Navbar() {
     { href: '/blog', label: 'Blog' },
     { href: '/resources', label: 'Resources' },
     { href: '/restaurant-qr-codes', label: 'Restaurant' },
+    { href: '/#feedback', label: 'Feedback' },
     { href: '/faq', label: 'FAQ' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },

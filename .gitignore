@@ -20,6 +20,10 @@ yarn-error.log*
 # env files
 .env*
 
+# logs and tracking data
+/logs/
+*.log
+
 # vercel
 .vercel
 

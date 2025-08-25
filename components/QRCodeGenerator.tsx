@@ -339,6 +339,30 @@ export default function QRCodeGenerator() {
     })
   }
 
+  // Function to silently track QR code generation
+  const trackQRGeneration = async () => {
+    try {
+      await fetch('/api/track-qr', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          businessName: businessName.trim(),
+          url: url.trim(),
+          contactNumber: contactNumber.trim(),
+          qrType,
+          timestamp: Date.now(),
+          userAgent: navigator.userAgent,
+          ip: 'client-side', // Will be replaced with actual IP on server
+        }),
+      })
+    } catch (error) {
+      // Silently fail - don't show error to user
+      console.log('Tracking failed:', error)
+    }
+  }
+
   const generateQRCode = async () => {
     if (!businessName.trim() || !url.trim()) {
       toast.warning("Please fill in both business name and URL to generate your QR code")
@@ -373,6 +397,10 @@ export default function QRCodeGenerator() {
         },
       })
       setQrCode(response)
+
+      // Silently track the QR code generation
+      trackQRGeneration()
+
       toast.success("Your QR code is ready for download!")
     } catch (error) {
       console.error("Error generating QR code:", error)
