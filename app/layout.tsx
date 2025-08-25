@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
 import StructuredData from "@/components/StructuredData";
+
 import { Analytics } from "@vercel/analytics/next";
 export const metadata: Metadata = {
   title:
@@ -151,6 +152,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* PWA Meta Tags */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="QR Generator" />
+        <meta name="application-name" content="QR Generator" />
+        <meta name="msapplication-TileColor" content="#1e40af" />
+        <meta name="msapplication-tap-highlight" content="no" />
+
+        {/* Performance and Security */}
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+
         <meta name="google-adsense-account" content="ca-pub-4895071519734738"></meta>
         <meta name="google-site-verification" content="rK-V-bkRiNac_snXDliif7WyssvpyOy_tNNoG3yElGk" />
         <Script
@@ -176,14 +191,16 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body suppressHydrationWarning>
-        <div className="min-h-screen flex flex-col">
-          <Analytics />
-          <Navbar />
+     
+          <div className="min-h-screen flex flex-col">
+            <Analytics />
+            <Navbar />
 
-          <main className="flex-grow">{children}</main>
-          <Footer />
-          <CookieConsent />
-        </div>
+            <main className="flex-grow">{children}</main>
+            <Footer />
+            <CookieConsent />
+          </div>
+
         <Analytics />
       </body>
     </html>
