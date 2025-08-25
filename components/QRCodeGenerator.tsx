@@ -36,6 +36,7 @@ const StarRating = ({ rating = 5, className = "" }: { rating?: number; className
 export default function QRCodeGenerator() {
   const [url, setUrl] = useState("")
   const [businessName, setBusinessName] = useState("")
+  const [contactNumber, setContactNumber] = useState("")
   const [qrCode, setQrCode] = useState("")
   const [qrType, setQrType] = useState<"feedback" | "website">("feedback")
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
@@ -525,6 +526,11 @@ export default function QRCodeGenerator() {
           <p style="font-size: 16px; color: ${secondaryColor}; margin: 0 0 12px 0;">
             ${url}
           </p>
+          ${contactNumber.trim() ? `
+            <p style="font-size: 16px; color: ${secondaryColor}; margin: 0 0 12px 0; font-weight: 500;">
+              📞 ${contactNumber.trim()}
+            </p>
+          ` : ''}
           ${qrType === 'feedback' ? `
             <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285F4">
@@ -896,6 +902,24 @@ export default function QRCodeGenerator() {
             />
           </div>
 
+          <div>
+            <label className={`${responsive.label} font-semibold block mb-3`}>
+              Contact Number: <span className="text-gray-500 font-normal">(Optional)</span>
+            </label>
+            <Input
+              type="tel"
+              placeholder={isMobile ? "Phone number" : "Enter contact number (e.g., +1 234 567 8900)"}
+              value={contactNumber}
+              onChange={(e) => setContactNumber(e.target.value)}
+              className={`w-full ${responsive.input} border-2 focus:border-blue-500 transition-colors font-medium`}
+              style={
+                logoColors
+                  ? { borderColor: `${logoColors.primary}40`, boxShadow: `0 0 0 1px ${logoColors.primary}00` }
+                  : {}
+              }
+            />
+          </div>
+
           {/* Image Upload Section */}
           <div className={responsive.spacing}>
             <label className={`${responsive.label} font-semibold block mb-4`}>Upload Logo/Image (Optional):</label>
@@ -1204,11 +1228,20 @@ export default function QRCodeGenerator() {
                     {businessName}
                   </h3>
                   <p
-                    className={`${responsive.qrUrl} ${isMobile ? "mb-3" : "mt-3"} break-all px-4 font-medium`}
+                    className={`${responsive.qrUrl} ${isMobile ? "mb-2" : "mt-3"} break-all px-4 font-medium`}
                     style={textStyles.secondary}
                   >
                     {url}
                   </p>
+                  {contactNumber.trim() && (
+                    <p
+                      className={`${responsive.qrUrl} ${isMobile ? "mb-3" : "mt-2"} px-4 font-medium flex items-center justify-center gap-2`}
+                      style={textStyles.secondary}
+                    >
+                      <span>📞</span>
+                      <span>{contactNumber}</span>
+                    </p>
+                  )}
 
                   {/* Additional Google Reviews indicator for feedback */}
                   {qrType === "feedback" && (
