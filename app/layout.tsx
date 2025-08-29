@@ -10,11 +10,44 @@ import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
 export const metadata: Metadata = {
   title:
-    "Free QR Code Generator | Create Custom QR Codes for Business, Reviews & Websites",
+    "Free QR Code Generator | QR Code Builder & Creator | Generate QR Codes Online",
   description:
-    "Create professional QR codes for your business, Google reviews, websites, and more. Free, customizable, and easy to use QR code generator with advanced features. No signup required.",
+    "Generate QR codes instantly with our free QR code generator. Create QR codes for websites, business, Google reviews & more. QR code builder with scanner support. No signup required - 100% free QR generator.",
   keywords: [
-    "QR code generator",
+    // High-volume primary keywords (673K searches)
+    "code qr generator",
+    "generator qr code", 
+    "qr code builder",
+    "qr code generator",
+    "qr qr code generator",
+    "scan code generator",
+    "qr-code generator",
+    
+    // Medium-volume keywords (246K searches)
+    "qr code code",
+    "qr codes",
+    "qrcode",
+    
+    // Scanner related keywords (201K-165K searches)
+    "code qr scanner",
+    "q r code scanner",
+    "qr code and scanner",
+    "qr code scan",
+    "qr code scannen",
+    "qr code scanner",
+    "qr code scanning",
+    
+    // Free QR code keywords (90.5K searches)
+    "create a qr code for free",
+    "code qr generator free", 
+    "create a qr code free",
+    "qr code generator free",
+    "free qr code generator",
+    "qr code free generator",
+    "free qr generator",
+    "qr generator free",
+    
+    // Additional targeted keywords
     "QR code creator",
     "business QR code",
     "Google review QR code",
@@ -22,13 +55,8 @@ export const metadata: Metadata = {
     "free QR code",
     "custom QR code",
     "QR code maker",
-    "QR code scanner",
     "QR code design",
     "qr code free",
-    "free qr code generator",
-    "qr code free generator",
-    "free qr generator",
-    "qr generator free",
     "qr code generator google",
     "qr code online generator",
     "online qr generator",
@@ -37,6 +65,16 @@ export const metadata: Metadata = {
     "canva qr code",
     "the qr code generator",
     "adobe",
+    "adobe qr code",
+    "qr code generator adobe",
+    "qr code generator pdf",
+    "barcode generator",
+    "qr code link generator",
+    "barcode",
+    "qr barcode generator",
+    "qr scanner",
+    "create qr code",
+    "qr code generator online free",
     "adobe qr code",
     "qr code generator adobe",
     "qr code generator pdf",
@@ -75,17 +113,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title:
-      "Free QR Code Generator | Create Custom QR Codes for Business, Reviews & Websites",
+      "Free QR Code Generator | QR Code Builder & Creator | Generate QR Codes Online",
     description:
-      "Create professional QR codes for your business, Google reviews, websites, and more. Free, customizable, and easy to use QR code generator with advanced features.",
+      "Generate QR codes instantly with our free QR code generator. Create QR codes for websites, business, Google reviews & more. QR code builder with scanner support. No signup required.",
     url: "https://www.freeqrcodegenerator.shop",
-    siteName: "QR Code Generator",
+    siteName: "Free QR Code Generator",
     images: [
       {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "QR Code Generator - Create Custom QR Codes for Business Reviews",
+        alt: "Free QR Code Generator - QR Code Builder for Business Reviews and Websites",
       },
     ],
     locale: "en_US",
@@ -94,9 +132,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "Free QR Code Generator | Create Custom QR Codes for Business, Reviews & Websites",
+      "Free QR Code Generator | QR Code Builder & Creator | Generate QR Codes Online",
     description:
-      "Create professional QR codes for your business, Google reviews, websites, and more. Free, customizable, and easy to use QR code generator with advanced features.",
+      "Generate QR codes instantly with our free QR code generator. Create QR codes for websites, business, Google reviews & more. QR code builder with scanner support.",
     images: ["/opengraph-image.png"],
     creator: "@qrcodegenerator",
   },

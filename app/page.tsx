@@ -10,20 +10,20 @@ export default function Home() {
         {/* Hero Section */}
         <section className="text-center py-8 sm:py-8 lg:py-8">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 text-blue-900 leading-tight">
-            Free QR Code Generator
+            Free QR Code Generator & Builder
           </h1>
           <p className="text-base sm:text-lg lg:text-xl text-gray-700 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
-            Instantly create custom QR codes for your business, website, Google reviews, and more. No signup required. 100% free and easy to use!
+            Generate QR codes instantly with our powerful QR code generator. Create QR codes for free - build custom QR codes for your business, websites, Google reviews, and more. Advanced QR code builder with built-in scanner support!
           </p>
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-6 sm:mb-8 px-4">
             <span className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
-              ✓ No Watermark
+              ✓ Free QR Code Generator
             </span>
             <span className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
-              ∞ Unlimited Scans
+              ∞ Unlimited QR Codes
             </span>
             <span className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
-              📱 High-Resolution
+              📱 QR Code Scanner Ready
             </span>
           </div>
         </section>
@@ -44,7 +44,7 @@ export default function Home() {
         <section className="mb-12 sm:mb-16 lg:mb-20 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-8 sm:mb-12 text-blue-800 text-center">
-              How It Works
+              How Our QR Code Generator Works
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20 text-center">
@@ -52,28 +52,28 @@ export default function Home() {
                   <span className="text-blue-800 font-bold text-lg">1</span>
                 </div>
                 <h3 className="font-semibold text-gray-800 mb-2">Enter Content</h3>
-                <p className="text-gray-600 text-sm">Add your URL, text, or contact info</p>
+                <p className="text-gray-600 text-sm">Add your URL, text, or contact info to our QR code builder</p>
               </div>
               <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20 text-center">
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-green-800 font-bold text-lg">2</span>
                 </div>
-                <h3 className="font-semibold text-gray-800 mb-2">Customize</h3>
-                <p className="text-gray-600 text-sm">Choose colors, size, and add your logo</p>
+                <h3 className="font-semibold text-gray-800 mb-2">Generate QR Code</h3>
+                <p className="text-gray-600 text-sm">Our QR code generator creates your custom QR code instantly</p>
               </div>
               <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20 text-center">
                 <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-purple-800 font-bold text-lg">3</span>
                 </div>
-                <h3 className="font-semibold text-gray-800 mb-2">Preview</h3>
-                <p className="text-gray-600 text-sm">See your QR code instantly</p>
+                <h3 className="font-semibold text-gray-800 mb-2">Scanner Ready</h3>
+                <p className="text-gray-600 text-sm">QR codes work with any QR code scanner app</p>
               </div>
               <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20 text-center">
                 <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-orange-800 font-bold text-lg">4</span>
                 </div>
-                <h3 className="font-semibold text-gray-800 mb-2">Download</h3>
-                <p className="text-gray-600 text-sm">Get high-resolution QR code for free</p>
+                <h3 className="font-semibold text-gray-800 mb-2">Free Download</h3>
+                <p className="text-gray-600 text-sm">Download high-resolution QR codes completely free</p>
               </div>
             </div>
           </div>
@@ -151,6 +151,77 @@ export default function Home() {
                     <p className="text-gray-600 text-sm">Generate and download QR codes in seconds.</p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SEO Content Section */}
+        <section className="mb-12 sm:mb-16 lg:mb-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 sm:p-12 border border-blue-100">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 text-blue-800 text-center">
+                The Best Free QR Code Generator & Builder
+              </h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-4">QR Code Generator Features</h3>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-center">
+                      <span className="text-green-600 mr-3">✓</span>
+                      <span><strong>Free QR code generator</strong> - Create QR codes completely free</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-600 mr-3">✓</span>
+                      <span><strong>QR code builder</strong> with advanced customization options</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-600 mr-3">✓</span>
+                      <span><strong>QR code scanner</strong> compatible codes for all devices</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-600 mr-3">✓</span>
+                      <span>Generate QR codes for websites, business, and reviews</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-600 mr-3">✓</span>
+                      <span>Create QR codes with logos and custom colors</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-4">Why Choose Our QR Generator?</h3>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-center">
+                      <span className="text-blue-600 mr-3">⚡</span>
+                      <span>Instant <strong>QR code generation</strong> - no waiting required</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-blue-600 mr-3">🔍</span>
+                      <span>Works with any <strong>QR code scanner</strong> app</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-blue-600 mr-3">📱</span>
+                      <span>Mobile-optimized <strong>QR code builder</strong></span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-blue-600 mr-3">💎</span>
+                      <span>High-resolution QR codes for printing</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-blue-600 mr-3">🔒</span>
+                      <span>Secure and private - no data stored</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="text-center">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Our <strong>free QR code generator</strong> is the perfect tool to <strong>create QR codes</strong> for any purpose. 
+                  Whether you need a <strong>QR code for business</strong>, websites, or customer reviews, our <strong>QR code builder</strong> 
+                  makes it easy to <strong>generate QR codes</strong> that work with any <strong>QR code scanner</strong>. 
+                  <strong>Create QR codes for free</strong> with unlimited downloads and no watermarks!
+                </p>
               </div>
             </div>
           </div>
