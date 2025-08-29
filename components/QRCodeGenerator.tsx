@@ -8,7 +8,8 @@ import * as htmlToImage from "html-to-image"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download, Star, Globe, Upload, X, Smartphone, Tablet, Monitor } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Download, Star, Globe, Upload, X, Smartphone, Tablet, Monitor, Sparkles } from "lucide-react"
 import { toast } from "sonner"
 
 // Google Icon Component
@@ -34,11 +35,15 @@ const StarRating = ({ rating = 5, className = "" }: { rating?: number; className
 )
 
 export default function QRCodeGenerator() {
-  const [url, setUrl] = useState("")
-  const [businessName, setBusinessName] = useState("")
-  const [contactNumber, setContactNumber] = useState("")
+  // Development defaults for faster testing
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  
+  const [url, setUrl] = useState(isDevelopment ? "https://g.page/r/CZ101Y9nOTs-EBM/review" : "")
+  const [businessName, setBusinessName] = useState(isDevelopment ? "Navibyte Innovations" : "")
+  const [contactNumber, setContactNumber] = useState(isDevelopment ? "9022738129" : "")
   const [qrCode, setQrCode] = useState("")
   const [qrType, setQrType] = useState<"feedback" | "website">("feedback")
+  const [useAiHelper, setUseAiHelper] = useState(true) // New state for AI review helper
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
@@ -384,8 +389,21 @@ export default function QRCodeGenerator() {
       // Add a small delay to show loading state
       await new Promise(resolve => setTimeout(resolve, 500))
 
+      // Determine the final URL for the QR code
+      let finalUrl = url
+      
+      // If it's a feedback QR and AI helper is enabled, create review helper URL
+      if (qrType === "feedback" && useAiHelper) {
+        const currentDomain = window.location.origin
+        const encodedBusinessName = encodeURIComponent(businessName.trim())
+        const encodedUrl = encodeURIComponent(url.trim())
+        finalUrl = `${currentDomain}/review-helper?business=${encodedBusinessName}&url=${encodedUrl}`
+        
+        toast.info("🤖 AI-assisted review QR code created!")
+      }
+
       const qrSize = isMobile ? 600 : isTablet ? 800 : 1000
-      const response = await QRCode.toDataURL(url, {
+      const response = await QRCode.toDataURL(finalUrl, {
         errorCorrectionLevel: "H",
         type: "image/png",
         quality: 1,
@@ -401,7 +419,11 @@ export default function QRCodeGenerator() {
       // Silently track the QR code generation
       trackQRGeneration()
 
-      toast.success("Your QR code is ready for download!")
+      if (qrType === "feedback" && useAiHelper) {
+        toast.success("Your AI-powered review QR code is ready! When scanned, it will help customers write better reviews.")
+      } else {
+        toast.success("Your QR code is ready for download!")
+      }
     } catch (error) {
       console.error("Error generating QR code:", error)
       toast.error("There was an error generating your QR code. Please try again.")
@@ -653,15 +675,33 @@ export default function QRCodeGenerator() {
   }
 
   const getHeaderText = () => {
-    return qrType === "feedback" ? "Rate & Review Us" : "Visit our website"
+    if (qrType === "feedback") {
+      if (useAiHelper) {
+        return "AI-Powered Review Experience"
+      }
+      return "Rate & Review Us"
+    }
+    return "Visit our website"
   }
 
   const getSubHeaderText = () => {
-    return qrType === "feedback" ? "Share your experience on Google" : "Discover more about us"
+    if (qrType === "feedback") {
+      if (useAiHelper) {
+        return "AI helps customers write better reviews"
+      }
+      return "Share your experience on Google"
+    }
+    return "Discover more about us"
   }
 
   const getFooterText = () => {
-    return qrType === "feedback" ? "Scan to leave a Google review" : "Scan to visit our website"
+    if (qrType === "feedback") {
+      if (useAiHelper) {
+        return "Scan for AI-assisted review experience"
+      }
+      return "Scan to leave a Google review"
+    }
+    return "Scan to visit our website"
   }
 
   const getGradientColors = () => {
@@ -884,6 +924,44 @@ export default function QRCodeGenerator() {
                 <span className={isMobile ? "text-left" : "text-center"}>Business Website</span>
               </Button>
             </div>
+
+            {/* AI Review Helper Option - Only show for feedback QRs */}
+            {qrType === "feedback" && (
+              <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="ai-helper"
+                    checked={useAiHelper}
+                    onCheckedChange={(checked) => setUseAiHelper(checked as boolean)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <label htmlFor="ai-helper" className="flex items-center gap-2 font-medium text-gray-900 cursor-pointer">
+                      <Sparkles className="h-4 w-4 text-purple-600" />
+                      Enable AI Review Assistant
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full font-semibold">NEW</span>
+                    </label>
+                    <p className="text-sm text-gray-600 mt-1">
+                      When enabled, customers will first see an AI assistant that helps them write thoughtful reviews before redirecting to your actual review page. This increases review quality and completion rates!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Development Mode Indicator */}
+            {isDevelopment && (
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-yellow-800">Development Mode</span>
+                  <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full">TEST DATA</span>
+                </div>
+                <p className="text-xs text-yellow-700 mt-1">
+                  Using Navibyte Innovations test data for faster development. This will be empty in production.
+                </p>
+              </div>
+            )}
           </div>
 
           <div>

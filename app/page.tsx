@@ -8,7 +8,7 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
-        <section className="text-center py-8 sm:py-12 lg:py-16">
+        <section className="text-center py-8 sm:py-8 lg:py-8">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 text-blue-900 leading-tight">
             Free QR Code Generator
           </h1>
@@ -28,20 +28,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* What is Free QR Code Generator? */}
-        <section className="mb-12 sm:mb-16 lg:mb-20 px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 text-blue-800">
-              What is Free QR Code Generator?
-            </h2>
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 shadow-lg border border-white/20">
-              <p className="text-base sm:text-lg lg:text-xl text-gray-700 leading-relaxed">
-                Free QR Code Generator is a simple, powerful tool that lets you create high-quality QR codes for any purpose. Whether you're a business owner, marketer, teacher, or just need a QR code for personal use, our platform is designed for you. We focus on privacy, ease of use, and customization—so you can generate QR codes that match your brand and needs, instantly and for free.
-              </p>
-            </div>
-          </div>
-        </section>
 
+    
         {/* QR Code Generator */}
         <section id="qr-generator" className="mb-12 sm:mb-16 lg:mb-20">
           <QRCodeGenerator />
