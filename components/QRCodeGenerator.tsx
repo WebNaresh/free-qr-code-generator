@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import QRCode from "qrcode"
 import * as htmlToImage from "html-to-image"
+import html2canvas from "html2canvas"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -487,150 +488,293 @@ export default function QRCodeGenerator() {
     toast.info("Creating high-resolution image...")
 
     try {
-      // Option 1: Try to capture the existing QR code element directly
-      if (qrCodeRef.current) {
-        try {
-          const dataUrl = await htmlToImage.toPng(qrCodeRef.current, {
-            quality: 1,
-            backgroundColor: '#ffffff',
-            pixelRatio: 2,
-            style: {
-              transform: 'scale(1)',
-              transformOrigin: 'top left'
-            }
-          })
+      // Create a completely new container with proper dimensions and overflow handling
+      const downloadContainer = document.createElement('div')
+      downloadContainer.style.position = 'absolute'
+      downloadContainer.style.left = '-10000px'
+      downloadContainer.style.top = '-10000px'
+      downloadContainer.style.width = '1000px' // Increased base width
+      downloadContainer.style.height = '1200px' // Increased base height
+      downloadContainer.style.backgroundColor = '#ffffff'
+      downloadContainer.style.padding = '60px' // Balanced padding
+      downloadContainer.style.margin = '0'
+      downloadContainer.style.border = 'none'
+      downloadContainer.style.outline = 'none'
+      downloadContainer.style.boxSizing = 'border-box' // Better for alignment
+      downloadContainer.style.overflow = 'visible'
+      downloadContainer.style.fontFamily = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      downloadContainer.style.display = 'flex'
+      downloadContainer.style.flexDirection = 'column'
+      downloadContainer.style.alignItems = 'center'
+      downloadContainer.style.justifyContent = 'flex-start'
+      downloadContainer.style.transform = 'none'
 
-          // Download the image
-          const link = document.createElement("a")
-          link.href = dataUrl
-          link.download = `${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode.png`
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-
-          toast.success("Your QR code has been saved to your device")
-          return
-        } catch (directCaptureError) {
-          console.log("Direct capture failed, trying custom container:", directCaptureError)
-        }
-      }
-
-      // Option 2: Create a custom container for better control
-      const tempContainer = document.createElement('div')
-      tempContainer.style.position = 'absolute'
-      tempContainer.style.left = '-9999px'
-      tempContainer.style.top = '-9999px'
-      tempContainer.style.width = '800px'
-      tempContainer.style.height = '1000px'
-      tempContainer.style.backgroundColor = '#ffffff'
-      tempContainer.style.padding = '40px'
-      tempContainer.style.fontFamily = 'system-ui, -apple-system, sans-serif'
-      tempContainer.style.display = 'flex'
-      tempContainer.style.flexDirection = 'column'
-      tempContainer.style.alignItems = 'center'
-      tempContainer.style.justifyContent = 'space-between'
-
-      // Get current colors
+      // Get current colors with fallbacks
       const primaryColor = logoColors?.dark || '#1f2937'
       const secondaryColor = logoColors?.primary || '#6b7280'
+      const accentColor = logoColors?.secondary || '#3b82f6'
 
-      // Build the content HTML with all dynamic content
-      tempContainer.innerHTML = `
-        <div style="text-align: center; margin-bottom: 30px;">
-          ${uploadedImage ? `
-            <div style="margin-bottom: 20px;">
-              <img src="${uploadedImage}" alt="Business logo" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px;" />
-            </div>
-          ` : ''}
+      // Create inner content container
+      const innerContainer = document.createElement('div')
+      innerContainer.style.width = '100%'
+      innerContainer.style.maxWidth = '880px'
+      innerContainer.style.height = 'auto'
+      innerContainer.style.display = 'flex'
+      innerContainer.style.flexDirection = 'column'
+      innerContainer.style.alignItems = 'center'
+      innerContainer.style.justifyContent = 'flex-start'
+      innerContainer.style.gap = '40px'
+      innerContainer.style.padding = '0'
+      innerContainer.style.boxSizing = 'border-box'
 
-          ${qrType === 'feedback' ? `
-            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px;">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" style="color: ${primaryColor};">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-              </svg>
-              <div style="display: flex; gap: 2px;">
-                ${Array(5).fill(0).map(() => `<svg width="20" height="20" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
-              </div>
-            </div>
-          ` : ''}
+      // Header section
+      const headerSection = document.createElement('div')
+      headerSection.style.textAlign = 'center'
+      headerSection.style.width = '100%'
+      headerSection.style.display = 'flex'
+      headerSection.style.flexDirection = 'column'
+      headerSection.style.alignItems = 'center'
+      headerSection.style.gap = '20px'
 
-          <h2 style="font-size: 28px; font-weight: bold; color: ${primaryColor}; margin: 0 0 12px 0; line-height: 1.2;">
-            ${getHeaderText()}
-          </h2>
-          <p style="font-size: 18px; color: ${secondaryColor}; margin: 0 0 20px 0; line-height: 1.4;">
-            ${getSubHeaderText()}
-          </p>
-        </div>
+      // Logo if exists
+      if (uploadedImage) {
+        const logoImg = document.createElement('img')
+        logoImg.src = uploadedImage
+        logoImg.style.width = '100px'
+        logoImg.style.height = '100px'
+        logoImg.style.objectFit = 'contain'
+        logoImg.style.borderRadius = '12px'
+        logoImg.style.marginBottom = '24px'
+        logoImg.style.display = 'block'
+        logoImg.style.margin = '0 auto 24px auto'
+        headerSection.appendChild(logoImg)
+      }
 
-        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border: 2px solid #e5e7eb;">
-          <img src="${qrCode}" alt="QR Code" style="width: 300px; height: 300px; display: block;" />
-        </div>
+      // Google icon and stars for feedback
+      if (qrType === 'feedback') {
+        const reviewHeader = document.createElement('div')
+        reviewHeader.style.display = 'flex'
+        reviewHeader.style.alignItems = 'center'
+        reviewHeader.style.justifyContent = 'center'
+        reviewHeader.style.gap = '16px'
+        reviewHeader.style.marginBottom = '20px'
+        
+        reviewHeader.innerHTML = `
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" style="color: ${primaryColor};">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <div style="display: flex; gap: 3px;">
+            ${Array(5).fill(0).map(() => `<svg width="24" height="24" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
+          </div>
+        `
+        headerSection.appendChild(reviewHeader)
+      }
 
-        <div style="text-align: center; margin-top: 30px;">
-          <h3 style="font-size: 24px; font-weight: bold; color: ${primaryColor}; margin: 0 0 8px 0;">
-            ${businessName.trim()}
-          </h3>
-          <p style="font-size: 16px; color: ${secondaryColor}; margin: 0 0 12px 0;">
-            ${url}
-          </p>
-          ${contactNumber.trim() ? `
-            <p style="font-size: 16px; color: ${secondaryColor}; margin: 0 0 12px 0; font-weight: 500;">
-              📞 ${contactNumber.trim()}
-            </p>
-          ` : ''}
-          ${qrType === 'feedback' ? `
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285F4">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              <span style="font-size: 14px; color: ${secondaryColor};">Google Reviews</span>
-              <div style="display: flex; gap: 1px;">
-                ${Array(5).fill(0).map(() => `<svg width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
-              </div>
-            </div>
-          ` : ''}
-          <p style="font-size: 14px; color: ${secondaryColor}; margin: 0;">
-            ${qrType === 'feedback' ? 'Scan to leave a Google review' : 'Scan with your phone camera'}
-          </p>
-        </div>
-      `
+      // Title
+      const title = document.createElement('h2')
+      title.textContent = getHeaderText()
+      title.style.fontSize = '32px'
+      title.style.fontWeight = 'bold'
+      title.style.color = primaryColor
+      title.style.margin = '0 0 16px 0'
+      title.style.lineHeight = '1.2'
+      title.style.textAlign = 'center'
+      headerSection.appendChild(title)
 
-      document.body.appendChild(tempContainer)
+      // Subtitle
+      const subtitle = document.createElement('p')
+      subtitle.textContent = getSubHeaderText()
+      subtitle.style.fontSize = '20px'
+      subtitle.style.color = secondaryColor
+      subtitle.style.margin = '0'
+      subtitle.style.lineHeight = '1.4'
+      subtitle.style.textAlign = 'center'
+      headerSection.appendChild(subtitle)
 
-      // Wait for images to load
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // QR Code section
+      const qrSection = document.createElement('div')
+      qrSection.style.display = 'flex'
+      qrSection.style.justifyContent = 'center'
+      qrSection.style.alignItems = 'center'
+      qrSection.style.width = '100%'
+      qrSection.style.maxWidth = '400px'
 
-      // Generate the image using html-to-image
-      const dataUrl = await htmlToImage.toPng(tempContainer, {
-        quality: 1,
-        backgroundColor: '#ffffff',
-        width: 800,
-        height: 1000,
-        pixelRatio: 2,
-        style: {
-          transform: 'scale(1)',
-          transformOrigin: 'top left'
-        }
-      })
+      // QR container with proper border and styling
+      const qrContainer = document.createElement('div')
+      qrContainer.style.padding = '30px'
+      qrContainer.style.backgroundColor = '#ffffff'
+      qrContainer.style.borderRadius = '20px'
+      qrContainer.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)'
+      qrContainer.style.border = '3px solid #e5e7eb'
+      qrContainer.style.display = 'flex'
+      qrContainer.style.justifyContent = 'center'
+      qrContainer.style.alignItems = 'center'
 
-      // Clean up
-      document.body.removeChild(tempContainer)
+      const qrImg = document.createElement('img')
+      qrImg.src = qrCode
+      qrImg.style.width = '300px'
+      qrImg.style.height = '300px'
+      qrImg.style.display = 'block'
+      qrImg.style.imageRendering = 'pixelated'
+      qrImg.style.border = '2px solid #f3f4f6'
+      qrImg.style.borderRadius = '8px'
+      
+      qrContainer.appendChild(qrImg)
+      qrSection.appendChild(qrContainer)
 
-      // Download the image
-      const link = document.createElement("a")
-      link.href = dataUrl
-      link.download = `${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode.png`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      // Footer section
+      const footerSection = document.createElement('div')
+      footerSection.style.textAlign = 'center'
+      footerSection.style.width = '100%'
+      footerSection.style.display = 'flex'
+      footerSection.style.flexDirection = 'column'
+      footerSection.style.alignItems = 'center'
+      footerSection.style.gap = '15px'
 
-      toast.success("Your QR code has been saved to your device")
+      // Business name
+      const businessNameEl = document.createElement('h3')
+      businessNameEl.textContent = businessName.trim()
+      businessNameEl.style.fontSize = '28px'
+      businessNameEl.style.fontWeight = 'bold'
+      businessNameEl.style.color = primaryColor
+      businessNameEl.style.margin = '0 0 12px 0'
+      footerSection.appendChild(businessNameEl)
+
+      // URL
+      const urlEl = document.createElement('p')
+      urlEl.textContent = url
+      urlEl.style.fontSize = '18px'
+      urlEl.style.color = secondaryColor
+      urlEl.style.margin = '0 0 16px 0'
+      urlEl.style.wordBreak = 'break-all'
+      footerSection.appendChild(urlEl)
+
+      // Contact number if provided
+      if (contactNumber.trim()) {
+        const contactEl = document.createElement('p')
+        contactEl.textContent = `📞 ${contactNumber.trim()}`
+        contactEl.style.fontSize = '18px'
+        contactEl.style.color = secondaryColor
+        contactEl.style.margin = '0 0 16px 0'
+        contactEl.style.fontWeight = '500'
+        footerSection.appendChild(contactEl)
+      }
+
+      // Google Reviews indicator for feedback
+      if (qrType === 'feedback') {
+        const reviewFooter = document.createElement('div')
+        reviewFooter.style.display = 'flex'
+        reviewFooter.style.alignItems = 'center'
+        reviewFooter.style.justifyContent = 'center'
+        reviewFooter.style.gap = '12px'
+        reviewFooter.style.marginBottom = '12px'
+        
+        reviewFooter.innerHTML = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#4285F4">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <span style="font-size: 16px; color: ${secondaryColor}; font-weight: 500;">Google Reviews</span>
+          <div style="display: flex; gap: 2px;">
+            ${Array(5).fill(0).map(() => `<svg width="18" height="18" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
+          </div>
+        `
+        footerSection.appendChild(reviewFooter)
+      }
+
+      // Final instruction
+      const instruction = document.createElement('p')
+      instruction.textContent = getFooterText()
+      instruction.style.fontSize = '16px'
+      instruction.style.color = secondaryColor
+      instruction.style.margin = '0'
+      instruction.style.fontWeight = '500'
+      footerSection.appendChild(instruction)
+
+      // Assemble everything
+      innerContainer.appendChild(headerSection)
+      innerContainer.appendChild(qrSection)
+      innerContainer.appendChild(footerSection)
+      downloadContainer.appendChild(innerContainer)
+
+      // Add to DOM temporarily
+      document.body.appendChild(downloadContainer)
+
+      // Wait for all images to load
+      await new Promise(resolve => setTimeout(resolve, 1500))
+
+      // Try html2canvas first (usually better with borders)
+      try {
+        const canvas = await html2canvas(downloadContainer, {
+          width: 1000,
+          height: 1200,
+          scale: 3, // Higher scale for better quality
+          backgroundColor: '#ffffff',
+          useCORS: true,
+          allowTaint: true,
+          imageTimeout: 15000,
+          removeContainer: false,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: 1000,
+          windowHeight: 1200,
+          logging: false
+        })
+
+        const dataUrl = canvas.toDataURL('image/png', 1.0)
+        
+        // Clean up
+        document.body.removeChild(downloadContainer)
+
+        // Download
+        const link = document.createElement("a")
+        link.href = dataUrl
+        link.download = `${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode.png`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        toast.success("Perfect QR code downloaded successfully!")
+        return
+
+      } catch (html2canvasError) {
+        console.log("html2canvas failed, trying htmlToImage:", html2canvasError)
+        
+        // Fallback to htmlToImage with better options
+        const dataUrl = await htmlToImage.toPng(downloadContainer, {
+          quality: 1,
+          backgroundColor: '#ffffff',
+          width: 1000,
+          height: 1200,
+          pixelRatio: 3, // Higher pixel ratio for better quality
+          canvasWidth: 3000,
+          canvasHeight: 3600,
+          style: {
+            transform: 'none',
+            width: '1000px',
+            height: '1200px',
+            boxSizing: 'border-box'
+          }
+        })
+
+        // Clean up
+        document.body.removeChild(downloadContainer)
+
+        // Download
+        const link = document.createElement("a")
+        link.href = dataUrl
+        link.download = `${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode.png`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        toast.success("QR code downloaded successfully!")
+      }
     } catch (error) {
       console.error("Error downloading QR code:", error)
       toast.error("There was an error downloading your QR code. Trying simple version...")
