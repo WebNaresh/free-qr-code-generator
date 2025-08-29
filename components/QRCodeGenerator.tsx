@@ -493,14 +493,15 @@ export default function QRCodeGenerator() {
       downloadContainer.style.position = 'absolute'
       downloadContainer.style.left = '-10000px'
       downloadContainer.style.top = '-10000px'
-      downloadContainer.style.width = '1000px' // Increased base width
-      downloadContainer.style.height = '1200px' // Increased base height
+      // Responsive container dimensions
+      downloadContainer.style.width = isMobile ? '800px' : '1000px'
+      downloadContainer.style.height = isMobile ? '1000px' : '1200px'
       downloadContainer.style.backgroundColor = '#ffffff'
-      downloadContainer.style.padding = '60px' // Balanced padding
+      downloadContainer.style.padding = isMobile ? '40px' : '60px'
       downloadContainer.style.margin = '0'
       downloadContainer.style.border = 'none'
       downloadContainer.style.outline = 'none'
-      downloadContainer.style.boxSizing = 'border-box' // Better for alignment
+      downloadContainer.style.boxSizing = 'border-box'
       downloadContainer.style.overflow = 'visible'
       downloadContainer.style.fontFamily = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
       downloadContainer.style.display = 'flex'
@@ -517,13 +518,13 @@ export default function QRCodeGenerator() {
       // Create inner content container
       const innerContainer = document.createElement('div')
       innerContainer.style.width = '100%'
-      innerContainer.style.maxWidth = '880px'
+      innerContainer.style.maxWidth = isMobile ? '720px' : '880px'
       innerContainer.style.height = 'auto'
       innerContainer.style.display = 'flex'
       innerContainer.style.flexDirection = 'column'
       innerContainer.style.alignItems = 'center'
       innerContainer.style.justifyContent = 'flex-start'
-      innerContainer.style.gap = '40px'
+      innerContainer.style.gap = isMobile ? '30px' : '40px'
       innerContainer.style.padding = '0'
       innerContainer.style.boxSizing = 'border-box'
 
@@ -600,11 +601,11 @@ export default function QRCodeGenerator() {
       qrSection.style.justifyContent = 'center'
       qrSection.style.alignItems = 'center'
       qrSection.style.width = '100%'
-      qrSection.style.maxWidth = '400px'
+      qrSection.style.maxWidth = isMobile ? '320px' : '400px'
 
       // QR container with proper border and styling
       const qrContainer = document.createElement('div')
-      qrContainer.style.padding = '30px'
+      qrContainer.style.padding = isMobile ? '20px' : '30px'
       qrContainer.style.backgroundColor = '#ffffff'
       qrContainer.style.borderRadius = '20px'
       qrContainer.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)'
@@ -615,8 +616,8 @@ export default function QRCodeGenerator() {
 
       const qrImg = document.createElement('img')
       qrImg.src = qrCode
-      qrImg.style.width = '300px'
-      qrImg.style.height = '300px'
+      qrImg.style.width = isMobile ? '250px' : '300px'
+      qrImg.style.height = isMobile ? '250px' : '300px'
       qrImg.style.display = 'block'
       qrImg.style.imageRendering = 'pixelated'
       qrImg.style.border = '2px solid #f3f4f6'
@@ -710,9 +711,12 @@ export default function QRCodeGenerator() {
 
       // Try html2canvas first (usually better with borders)
       try {
+        const canvasWidth = isMobile ? 800 : 1000
+        const canvasHeight = isMobile ? 1000 : 1200
+        
         const canvas = await html2canvas(downloadContainer, {
-          width: 1000,
-          height: 1200,
+          width: canvasWidth,
+          height: canvasHeight,
           scale: 3, // Higher scale for better quality
           backgroundColor: '#ffffff',
           useCORS: true,
@@ -721,8 +725,8 @@ export default function QRCodeGenerator() {
           removeContainer: false,
           scrollX: 0,
           scrollY: 0,
-          windowWidth: 1000,
-          windowHeight: 1200,
+          windowWidth: canvasWidth,
+          windowHeight: canvasHeight,
           logging: false
         })
 
@@ -746,18 +750,21 @@ export default function QRCodeGenerator() {
         console.log("html2canvas failed, trying htmlToImage:", html2canvasError)
         
         // Fallback to htmlToImage with better options
+        const canvasWidth = isMobile ? 800 : 1000
+        const canvasHeight = isMobile ? 1000 : 1200
+        
         const dataUrl = await htmlToImage.toPng(downloadContainer, {
           quality: 1,
           backgroundColor: '#ffffff',
-          width: 1000,
-          height: 1200,
+          width: canvasWidth,
+          height: canvasHeight,
           pixelRatio: 3, // Higher pixel ratio for better quality
-          canvasWidth: 3000,
-          canvasHeight: 3600,
+          canvasWidth: canvasWidth * 3,
+          canvasHeight: canvasHeight * 3,
           style: {
             transform: 'none',
-            width: '1000px',
-            height: '1200px',
+            width: `${canvasWidth}px`,
+            height: `${canvasHeight}px`,
             boxSizing: 'border-box'
           }
         })
@@ -934,40 +941,40 @@ export default function QRCodeGenerator() {
   // Enhanced responsive classes with larger font sizes
   const getResponsiveClasses = () => {
     return {
-      card: isMobile ? "mx-2" : "mx-auto max-w-4xl",
+      card: isMobile ? "mx-2 px-3" : "mx-auto max-w-4xl",
       // Main title - significantly larger
       title: isMobile ? "text-3xl sm:text-4xl" : "text-4xl lg:text-5xl xl:text-6xl",
       // Subtitle - increased for better readability
       subtitle: isMobile ? "text-base sm:text-lg" : "text-lg lg:text-xl",
       // Form inputs - larger for better usability
-      input: isMobile ? "text-lg py-4" : "text-xl py-5",
+      input: isMobile ? "text-base py-3" : "text-xl py-5",
       // Buttons - more prominent
-      button: isMobile ? "py-4 text-lg" : "py-5 text-xl",
-      // QR container padding
-      qrContainer: isMobile ? "p-6 sm:p-8" : isTablet ? "p-10" : "p-14",
+      button: isMobile ? "py-3 text-base font-medium" : "py-5 text-xl",
+      // QR container padding - reduced for mobile
+      qrContainer: isMobile ? "p-4 sm:p-6" : isTablet ? "p-8" : "p-12",
       // QR page titles - much larger for impact
-      qrTitle: isMobile ? "text-2xl sm:text-3xl" : isTablet ? "text-4xl" : "text-5xl xl:text-6xl",
+      qrTitle: isMobile ? "text-xl sm:text-2xl" : isTablet ? "text-3xl" : "text-4xl xl:text-5xl",
       // QR page subtitles - increased
-      qrSubtitle: isMobile ? "text-lg" : isTablet ? "text-xl" : "text-2xl",
+      qrSubtitle: isMobile ? "text-base" : isTablet ? "text-lg" : "text-xl",
       // Business name - prominent
-      qrBusinessName: isMobile ? "text-2xl" : isTablet ? "text-3xl" : "text-4xl xl:text-5xl",
+      qrBusinessName: isMobile ? "text-lg sm:text-xl" : isTablet ? "text-2xl" : "text-3xl xl:text-4xl",
       // URL text - readable
-      qrUrl: isMobile ? "text-sm" : isTablet ? "text-base" : "text-lg xl:text-xl",
+      qrUrl: isMobile ? "text-xs sm:text-sm" : isTablet ? "text-sm" : "text-base xl:text-lg",
       // Footer text - clear
-      qrFooter: isMobile ? "text-sm" : isTablet ? "text-base" : "text-lg",
+      qrFooter: isMobile ? "text-xs sm:text-sm" : isTablet ? "text-sm" : "text-base",
       // Logo sizes - proportionally larger and dynamic
       logoSize: getLogoSizeClasses(),
-      // QR code sizes
-      qrCodeSize: isMobile ? "max-w-56" : isTablet ? "max-w-72" : "max-w-80",
+      // QR code sizes - optimized for mobile
+      qrCodeSize: isMobile ? "w-48 h-48 sm:w-56 sm:h-56" : isTablet ? "w-64 h-64" : "w-72 h-72",
       // Spacing
-      spacing: isMobile ? "space-y-6" : "space-y-8",
-      gap: isMobile ? "gap-3" : "gap-5",
+      spacing: isMobile ? "space-y-4" : "space-y-6",
+      gap: isMobile ? "gap-2" : "gap-4",
       // Labels - more prominent
-      label: isMobile ? "text-lg" : "text-xl",
+      label: isMobile ? "text-base font-medium" : "text-lg",
       // Color preview labels
       colorLabel: isMobile ? "text-sm" : "text-base",
       // Footer text
-      footerText: isMobile ? "text-base" : "text-lg",
+      footerText: isMobile ? "text-sm" : "text-base",
     }
   }
 
@@ -1387,45 +1394,45 @@ export default function QRCodeGenerator() {
             <div className={`mt-8 ${responsive.spacing}`}>
               <div
                 ref={qrCodeRef}
-                className={`flex flex-col items-center justify-between ${responsive.qrContainer} rounded-xl shadow-2xl overflow-hidden relative`}
+                className={`flex flex-col items-center justify-between ${responsive.qrContainer} rounded-xl shadow-2xl overflow-hidden relative mx-auto`}
                 style={{
-                  border: logoColors ? `4px solid ${logoColors.dark}` : '4px solid #e5e7eb', // Use darkest color for main border
-                  background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)", // Always use neutral white/light gray background
-                  aspectRatio: isMobile ? "1 / 1.2" : "1 / 1.414",
+                  border: logoColors ? `${isMobile ? '3px' : '4px'} solid ${logoColors.dark}` : `${isMobile ? '3px' : '4px'} solid #e5e7eb`,
+                  background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+                  aspectRatio: isMobile ? "10 / 14" : isTablet ? "10 / 14" : "1 / 1.414",
                   width: "100%",
-                  maxWidth: isMobile ? "100%" : isTablet ? "600px" : "800px",
-                  margin: "0 auto",
+                  maxWidth: isMobile ? "340px" : isTablet ? "500px" : "700px",
+                  minHeight: isMobile ? "400px" : isTablet ? "600px" : "800px",
                 }}
               >
                 {/* Decorative elements - responsive */}
                 <div
-                  className={`absolute top-0 left-0 w-full h-full border-[${isMobile ? "8px" : "16px"}] rounded-xl pointer-events-none`}
+                  className={`absolute top-0 left-0 w-full h-full border-[${isMobile ? "6px" : "12px"}] rounded-xl pointer-events-none`}
                   style={
                     logoColors
                       ? {
-                          borderColor: `${logoColors.dark}30`, // Use darkest color with opacity
-                          borderWidth: isMobile ? "8px" : "16px",
+                          borderColor: `${logoColors.dark}30`,
+                          borderWidth: isMobile ? "6px" : "12px",
                         }
-                      : {}
+                      : { borderWidth: isMobile ? "6px" : "12px" }
                   }
                 />
                 <div
-                  className={`absolute ${isMobile ? "top-2 left-2 right-2 bottom-2" : "top-4 left-4 right-4 bottom-4"} border-[2px] rounded-xl pointer-events-none`}
+                  className={`absolute ${isMobile ? "top-1 left-1 right-1 bottom-1" : "top-2 left-2 right-2 bottom-2"} border-[1px] rounded-xl pointer-events-none`}
                   style={
                     logoColors
                       ? {
-                          borderColor: `${logoColors.dark}50`, // Use darkest color with opacity
-                          borderWidth: "2px",
+                          borderColor: `${logoColors.dark}50`,
+                          borderWidth: "1px",
                         }
-                      : {}
+                      : { borderWidth: "1px" }
                   }
                 />
                 <div
-                  className={`absolute top-0 left-0 ${isMobile ? "w-16 h-16" : "w-32 h-32"} rounded-br-full opacity-50`}
+                  className={`absolute top-0 left-0 ${isMobile ? "w-12 h-12" : "w-24 h-24"} rounded-br-full opacity-50`}
                   style={cornerStyles.topLeft}
                 />
                 <div
-                  className={`absolute bottom-0 right-0 ${isMobile ? "w-16 h-16" : "w-32 h-32"} rounded-tl-full opacity-50`}
+                  className={`absolute bottom-0 right-0 ${isMobile ? "w-12 h-12" : "w-24 h-24"} rounded-tl-full opacity-50`}
                   style={cornerStyles.bottomRight}
                 />
 
@@ -1461,12 +1468,18 @@ export default function QRCodeGenerator() {
                 </div>
 
                 <div
-                  className={`z-10 bg-white ${isMobile ? "p-4" : "p-8"} rounded-xl shadow-lg border border-gray-100`}
+                  className={`z-10 bg-white ${isMobile ? "p-3" : "p-6"} rounded-xl shadow-lg border border-gray-100 mx-auto`}
+                  style={{ maxWidth: isMobile ? "200px" : "280px" }}
                 >
                   <img
                     src={qrCode || "/placeholder.svg"}
                     alt="QR Code"
                     className={`${responsive.qrCodeSize} mx-auto rounded-lg`}
+                    style={{ 
+                      width: isMobile ? "180px" : "250px", 
+                      height: isMobile ? "180px" : "250px",
+                      maxWidth: "100%"
+                    }}
                   />
                 </div>
 
@@ -1513,32 +1526,32 @@ export default function QRCodeGenerator() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 mt-8">
+              <div className={`flex flex-col ${responsive.gap} ${isMobile ? 'mt-6' : 'mt-8'} px-2`}>
                 <Button
                   onClick={downloadQRCodePage}
                   disabled={isDownloading}
-                  className={`w-full ${responsive.button} bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-200 font-bold`}
+                  className={`w-full ${responsive.button} bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-200 font-bold flex items-center justify-center`}
                   style={
                     logoColors
-                      ? { background: `linear-gradient(to right, ${logoColors.dark}, ${logoColors.dark}AA)` } // Use darkest color
+                      ? { background: `linear-gradient(to right, ${logoColors.dark}, ${logoColors.dark}AA)` }
                       : {}
                   }
                 >
-                  <Download className="mr-4 h-6 w-6" />
+                  <Download className={`${isMobile ? 'mr-2 h-4 w-4' : 'mr-4 h-6 w-6'}`} />
                   {isDownloading ? "Creating Image..." : "Download Full QR Code"}
                 </Button>
 
                 <Button
                   onClick={downloadSimpleQR}
                   variant="outline"
-                  className={`w-full ${responsive.button} border-2 hover:bg-gray-50 transition-all duration-200`}
+                  className={`w-full ${responsive.button} border-2 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center`}
                   style={
                     logoColors
                       ? { borderColor: logoColors.dark, color: logoColors.dark }
                       : {}
                   }
                 >
-                  <Download className="mr-4 h-5 w-5" />
+                  <Download className={`${isMobile ? 'mr-2 h-4 w-4' : 'mr-4 h-5 w-5'}`} />
                   Download Simple QR Code
                 </Button>
               </div>
