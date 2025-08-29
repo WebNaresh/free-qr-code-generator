@@ -7,8 +7,8 @@ export default function StructuredData() {
       {
         "@type": "WebApplication",
         "@id": "https://www.freeqrcodegenerator.shop/#webapp",
-        "name": "Free QR Code Generator",
-        "description": "Create professional QR codes for your business, Google reviews, websites, and more. Free, customizable, and easy to use QR code generator with advanced features.",
+        "name": "Free QR Code Generator & Builder",
+        "description": "Generate QR codes instantly with our free QR code generator. Create QR codes for websites, business, Google reviews & more. QR code builder with scanner support. No signup required - 100% free QR generator.",
         "url": "https://www.freeqrcodegenerator.shop",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web Browser",
@@ -19,13 +19,28 @@ export default function StructuredData() {
           "availability": "https://schema.org/InStock"
         },
         "featureList": [
-          "QR Code Generation for Business Reviews",
-          "Website QR Codes",
-          "Custom Logo Integration",
-          "High-Resolution Downloads",
-          "Mobile Responsive Design",
+          "Free QR Code Generator",
+          "QR Code Builder with Customization",
+          "QR Code Scanner Compatible",
+          "Generate QR Codes for Business",
+          "Create QR Codes for Websites", 
+          "Google Review QR Codes",
+          "Custom Logo QR Codes",
+          "High-Resolution QR Code Downloads",
+          "Mobile QR Code Generator",
+          "Bulk QR Code Creation",
           "No Registration Required",
-          "Free to Use"
+          "100% Free QR Generator"
+        ],
+        "keywords": [
+          "code qr generator",
+          "generator qr code", 
+          "qr code builder",
+          "qr code generator",
+          "free qr code generator",
+          "qr code scanner",
+          "create qr code free",
+          "qr generator free"
         ],
         "screenshot": "https://www.freeqrcodegenerator.shop/opengraph-image.png",
         "author": {
@@ -36,7 +51,7 @@ export default function StructuredData() {
       {
         "@type": "Organization",
         "@id": "https://www.freeqrcodegenerator.shop/#organization",
-        "name": "QR Code Generator",
+        "name": "Free QR Code Generator",
         "url": "https://www.freeqrcodegenerator.shop",
         "logo": {
           "@type": "ImageObject",

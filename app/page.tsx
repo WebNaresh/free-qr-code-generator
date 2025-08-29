@@ -352,6 +352,64 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* FAQ Section with SEO Keywords */}
+        <section className="mb-12 sm:mb-16 lg:mb-20 px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-8 sm:mb-12 text-blue-800 text-center">
+              Frequently Asked Questions About QR Code Generator
+            </h2>
+            <div className="space-y-6">
+              <div className="bg-white/90 rounded-xl p-6 shadow-lg border border-blue-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-3">How do I use a free QR code generator?</h3>
+                <p className="text-gray-700">
+                  Our <strong>free QR code generator</strong> is simple to use. Just enter your content (URL, text, etc.), 
+                  customize the design, and click "Generate QR Code". You can then download your <strong>QR code</strong> 
+                  instantly. The generated <strong>QR codes</strong> work with any <strong>QR code scanner</strong>.
+                </p>
+              </div>
+              
+              <div className="bg-white/90 rounded-xl p-6 shadow-lg border border-green-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-3">What QR code scanner apps work with generated QR codes?</h3>
+                <p className="text-gray-700">
+                  Our <strong>QR code generator</strong> creates <strong>QR codes</strong> compatible with all major 
+                  <strong>QR code scanner</strong> apps including iPhone Camera, Google Lens, and dedicated 
+                  <strong>QR code scanning</strong> apps. You can test <strong>QR code scan</strong> functionality 
+                  with any smartphone camera or <strong>QR code scanner</strong> application.
+                </p>
+              </div>
+
+              <div className="bg-white/90 rounded-xl p-6 shadow-lg border border-purple-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-3">Can I create QR codes for free without limits?</h3>
+                <p className="text-gray-700">
+                  Yes! Our <strong>QR code builder</strong> allows you to <strong>create QR codes for free</strong> with 
+                  no limits on generation or downloads. You can <strong>generate QR codes</strong> for websites, business, 
+                  reviews, and more using our <strong>free QR code generator</strong> without any restrictions.
+                </p>
+              </div>
+
+              <div className="bg-white/90 rounded-xl p-6 shadow-lg border border-orange-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-3">What's the difference between a QR code generator and QR code builder?</h3>
+                <p className="text-gray-700">
+                  A <strong>QR code generator</strong> creates basic <strong>QR codes</strong>, while a 
+                  <strong>QR code builder</strong> offers advanced customization options. Our platform combines both - 
+                  you can quickly <strong>generate QR codes</strong> or use advanced <strong>QR code builder</strong> 
+                  features to customize colors, add logos, and create branded <strong>QR codes</strong>.
+                </p>
+              </div>
+
+              <div className="bg-white/90 rounded-xl p-6 shadow-lg border border-red-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-3">How do I ensure my QR codes work with QR code scanners?</h3>
+                <p className="text-gray-700">
+                  Our <strong>QR code generator</strong> automatically optimizes <strong>QR codes</strong> for maximum 
+                  <strong>QR code scanner</strong> compatibility. Test your generated <strong>QR code</strong> with 
+                  multiple <strong>QR code scanning</strong> apps, ensure high contrast, and verify 
+                  <strong>QR code scan</strong> reliability before printing or sharing.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       {/* Trust Indicators */}

@@ -23,14 +23,20 @@ module.exports = {
       customConfig.changefreq = "daily";
     }
 
-    // Main tool pages get high priority
+    // Main tool pages get high priority (targeting high-volume keywords)
     else if (["/tools", "/restaurant-qr-codes"].includes(path)) {
       customConfig.priority = 0.9;
       customConfig.changefreq = "daily";
     }
 
+    // Blog content targeting QR code generator keywords
+    else if (["/blog"].includes(path)) {
+      customConfig.priority = 0.85;
+      customConfig.changefreq = "weekly";
+    }
+
     // Content pages get medium-high priority
-    else if (["/about", "/blog", "/faq", "/resources"].includes(path)) {
+    else if (["/about", "/faq", "/resources"].includes(path)) {
       customConfig.priority = 0.8;
       customConfig.changefreq = "weekly";
     }
