@@ -488,246 +488,313 @@ export default function QRCodeGenerator() {
     toast.info("Creating high-resolution image...")
 
     try {
-      // Create a completely new container with proper dimensions and overflow handling
+      // Create a new container that exactly matches the preview layout
       const downloadContainer = document.createElement('div')
       downloadContainer.style.position = 'absolute'
       downloadContainer.style.left = '-10000px'
       downloadContainer.style.top = '-10000px'
-      // Responsive container dimensions
-      downloadContainer.style.width = isMobile ? '800px' : '1000px'
-      downloadContainer.style.height = isMobile ? '1000px' : '1200px'
+      downloadContainer.style.width = isMobile ? '400px' : '800px'
+      downloadContainer.style.height = 'auto'
       downloadContainer.style.backgroundColor = '#ffffff'
-      downloadContainer.style.padding = isMobile ? '40px' : '60px'
-      downloadContainer.style.margin = '0'
-      downloadContainer.style.border = 'none'
-      downloadContainer.style.outline = 'none'
-      downloadContainer.style.boxSizing = 'border-box'
-      downloadContainer.style.overflow = 'visible'
+      downloadContainer.style.padding = '20px'
       downloadContainer.style.fontFamily = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
       downloadContainer.style.display = 'flex'
-      downloadContainer.style.flexDirection = 'column'
+      downloadContainer.style.justifyContent = 'center'
       downloadContainer.style.alignItems = 'center'
-      downloadContainer.style.justifyContent = 'flex-start'
-      downloadContainer.style.transform = 'none'
 
-      // Get current colors with fallbacks
-      const primaryColor = logoColors?.dark || '#1f2937'
-      const secondaryColor = logoColors?.primary || '#6b7280'
-      const accentColor = logoColors?.secondary || '#3b82f6'
+      // Create the main QR container with exact same styling as preview
+      const qrContainer = document.createElement('div')
+      qrContainer.style.width = isMobile ? '350px' : '700px'
+      qrContainer.style.minHeight = isMobile ? '580px' : '950px'
+      qrContainer.style.backgroundColor = '#ffffff'
+      qrContainer.style.background = "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)"
+      qrContainer.style.border = logoColors ? `${isMobile ? '3px' : '4px'} solid ${logoColors.dark}` : `${isMobile ? '3px' : '4px'} solid #e5e7eb`
+      qrContainer.style.borderRadius = '12px'
+      qrContainer.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+      qrContainer.style.display = 'flex'
+      qrContainer.style.flexDirection = 'column'
+      qrContainer.style.alignItems = 'center'
+      qrContainer.style.justifyContent = 'space-between'
+      qrContainer.style.padding = isMobile ? '28px 24px' : '44px 36px'
+      qrContainer.style.boxSizing = 'border-box'
+      qrContainer.style.position = 'relative'
+      qrContainer.style.overflow = 'hidden'
 
-      // Create inner content container
-      const innerContainer = document.createElement('div')
-      innerContainer.style.width = '100%'
-      innerContainer.style.maxWidth = isMobile ? '720px' : '880px'
-      innerContainer.style.height = 'auto'
-      innerContainer.style.display = 'flex'
-      innerContainer.style.flexDirection = 'column'
-      innerContainer.style.alignItems = 'center'
-      innerContainer.style.justifyContent = 'flex-start'
-      innerContainer.style.gap = isMobile ? '30px' : '40px'
-      innerContainer.style.padding = '0'
-      innerContainer.style.boxSizing = 'border-box'
+      // Add decorative elements
+      const decorator1 = document.createElement('div')
+      decorator1.style.position = 'absolute'
+      decorator1.style.top = '0'
+      decorator1.style.left = '0'
+      decorator1.style.width = '100%'
+      decorator1.style.height = '100%'
+      decorator1.style.border = `${isMobile ? '6px' : '12px'} solid ${logoColors?.dark ? `${logoColors.dark}30` : '#e5e7eb30'}`
+      decorator1.style.borderRadius = '12px'
+      decorator1.style.pointerEvents = 'none'
+      qrContainer.appendChild(decorator1)
 
-      // Header section
-      const headerSection = document.createElement('div')
-      headerSection.style.textAlign = 'center'
-      headerSection.style.width = '100%'
-      headerSection.style.display = 'flex'
-      headerSection.style.flexDirection = 'column'
-      headerSection.style.alignItems = 'center'
-      headerSection.style.gap = '20px'
+      const decorator2 = document.createElement('div')
+      decorator2.style.position = 'absolute'
+      decorator2.style.top = isMobile ? '1px' : '2px'
+      decorator2.style.left = isMobile ? '1px' : '2px'
+      decorator2.style.right = isMobile ? '1px' : '2px'
+      decorator2.style.bottom = isMobile ? '1px' : '2px'
+      decorator2.style.border = `1px solid ${logoColors?.dark ? `${logoColors.dark}50` : '#e5e7eb50'}`
+      decorator2.style.borderRadius = '12px'
+      decorator2.style.pointerEvents = 'none'
+      qrContainer.appendChild(decorator2)
 
-      // Logo if exists
+      // Top section with header content
+      const topSection = document.createElement('div')
+      topSection.style.textAlign = 'center'
+      topSection.style.zIndex = '10'
+      topSection.style.marginBottom = isMobile ? '24px' : '40px'
+
+      // Add logo if exists
       if (uploadedImage) {
         const logoImg = document.createElement('img')
         logoImg.src = uploadedImage
-        logoImg.style.width = '100px'
-        logoImg.style.height = '100px'
+        logoImg.style.width = isMobile ? '60px' : '80px'
+        logoImg.style.height = isMobile ? '60px' : '80px'
         logoImg.style.objectFit = 'contain'
-        logoImg.style.borderRadius = '12px'
-        logoImg.style.marginBottom = '24px'
+        logoImg.style.borderRadius = '8px'
+        logoImg.style.marginBottom = isMobile ? '16px' : '24px'
         logoImg.style.display = 'block'
-        logoImg.style.margin = '0 auto 24px auto'
-        headerSection.appendChild(logoImg)
+        logoImg.style.margin = `0 auto ${isMobile ? '16px' : '24px'} auto`
+        topSection.appendChild(logoImg)
       }
 
-      // Google icon and stars for feedback
+      // Add Google icons and stars for feedback type
       if (qrType === 'feedback') {
         const reviewHeader = document.createElement('div')
         reviewHeader.style.display = 'flex'
         reviewHeader.style.alignItems = 'center'
         reviewHeader.style.justifyContent = 'center'
-        reviewHeader.style.gap = '16px'
-        reviewHeader.style.marginBottom = '20px'
-        
-        reviewHeader.innerHTML = `
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" style="color: ${primaryColor};">
+        reviewHeader.style.gap = isMobile ? '12px' : '16px'
+        reviewHeader.style.marginBottom = isMobile ? '12px' : '16px'
+
+        // Google icon
+        const googleIcon = document.createElement('div')
+        googleIcon.innerHTML = `
+          <svg width="${isMobile ? '32' : '40'}" height="${isMobile ? '32' : '40'}" viewBox="0 0 24 24" fill="currentColor">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
-          <div style="display: flex; gap: 3px;">
-            ${Array(5).fill(0).map(() => `<svg width="24" height="24" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
-          </div>
         `
-        headerSection.appendChild(reviewHeader)
+        reviewHeader.appendChild(googleIcon)
+
+        // Stars
+        const starsContainer = document.createElement('div')
+        starsContainer.style.display = 'flex'
+        starsContainer.style.gap = '2px'
+        for (let i = 0; i < 5; i++) {
+          const star = document.createElement('div')
+          star.innerHTML = `<svg width="${isMobile ? '20' : '24'}" height="${isMobile ? '20' : '24'}" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`
+          starsContainer.appendChild(star)
+        }
+        reviewHeader.appendChild(starsContainer)
+        topSection.appendChild(reviewHeader)
       }
 
       // Title
       const title = document.createElement('h2')
       title.textContent = getHeaderText()
-      title.style.fontSize = '32px'
+      title.style.fontSize = isMobile ? '20px' : '28px'
       title.style.fontWeight = 'bold'
-      title.style.color = primaryColor
-      title.style.margin = '0 0 16px 0'
+      title.style.color = logoColors?.dark || '#1f2937'
+      title.style.margin = `0 0 ${isMobile ? '8px' : '12px'} 0`
       title.style.lineHeight = '1.2'
       title.style.textAlign = 'center'
-      headerSection.appendChild(title)
+      topSection.appendChild(title)
 
       // Subtitle
       const subtitle = document.createElement('p')
       subtitle.textContent = getSubHeaderText()
-      subtitle.style.fontSize = '20px'
-      subtitle.style.color = secondaryColor
+      subtitle.style.fontSize = isMobile ? '14px' : '18px'
+      subtitle.style.color = logoColors?.primary || '#6b7280'
       subtitle.style.margin = '0'
       subtitle.style.lineHeight = '1.4'
       subtitle.style.textAlign = 'center'
-      headerSection.appendChild(subtitle)
+      topSection.appendChild(subtitle)
 
-      // QR Code section
+      // QR Code section (middle)
       const qrSection = document.createElement('div')
+      qrSection.style.backgroundColor = '#ffffff'
+      qrSection.style.padding = isMobile ? '12px' : '24px'
+      qrSection.style.borderRadius = '12px'
+      qrSection.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
+      qrSection.style.border = '1px solid #e5e7eb'
       qrSection.style.display = 'flex'
       qrSection.style.justifyContent = 'center'
       qrSection.style.alignItems = 'center'
-      qrSection.style.width = '100%'
-      qrSection.style.maxWidth = isMobile ? '320px' : '400px'
-
-      // QR container with proper border and styling
-      const qrContainer = document.createElement('div')
-      qrContainer.style.padding = isMobile ? '20px' : '30px'
-      qrContainer.style.backgroundColor = '#ffffff'
-      qrContainer.style.borderRadius = '20px'
-      qrContainer.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)'
-      qrContainer.style.border = '3px solid #e5e7eb'
-      qrContainer.style.display = 'flex'
-      qrContainer.style.justifyContent = 'center'
-      qrContainer.style.alignItems = 'center'
+      qrSection.style.zIndex = '10'
 
       const qrImg = document.createElement('img')
       qrImg.src = qrCode
-      qrImg.style.width = isMobile ? '250px' : '300px'
-      qrImg.style.height = isMobile ? '250px' : '300px'
-      qrImg.style.display = 'block'
+      qrImg.style.width = isMobile ? '180px' : '250px'
+      qrImg.style.height = isMobile ? '180px' : '250px'
       qrImg.style.imageRendering = 'pixelated'
-      qrImg.style.border = '2px solid #f3f4f6'
       qrImg.style.borderRadius = '8px'
-      
-      qrContainer.appendChild(qrImg)
-      qrSection.appendChild(qrContainer)
+      qrImg.style.border = '2px solid #f3f4f6'
+      qrSection.appendChild(qrImg)
 
-      // Footer section
-      const footerSection = document.createElement('div')
-      footerSection.style.textAlign = 'center'
-      footerSection.style.width = '100%'
-      footerSection.style.display = 'flex'
-      footerSection.style.flexDirection = 'column'
-      footerSection.style.alignItems = 'center'
-      footerSection.style.gap = '15px'
+      // Bottom section with business info
+      const bottomSection = document.createElement('div')
+      bottomSection.style.textAlign = 'center'
+      bottomSection.style.zIndex = '10'
+      bottomSection.style.marginTop = isMobile ? '36px' : '56px'
+      bottomSection.style.padding = isMobile ? '0 20px' : '0 32px'
+      bottomSection.style.display = 'flex'
+      bottomSection.style.flexDirection = 'column'
+      bottomSection.style.gap = isMobile ? '16px' : '20px'
+      bottomSection.style.minHeight = isMobile ? '120px' : '160px'
 
       // Business name
       const businessNameEl = document.createElement('h3')
       businessNameEl.textContent = businessName.trim()
-      businessNameEl.style.fontSize = '28px'
+      businessNameEl.style.fontSize = isMobile ? '18px' : '24px'
       businessNameEl.style.fontWeight = 'bold'
-      businessNameEl.style.color = primaryColor
-      businessNameEl.style.margin = '0 0 12px 0'
-      footerSection.appendChild(businessNameEl)
+      businessNameEl.style.color = logoColors?.dark || '#1f2937'
+      businessNameEl.style.margin = '0'
+      businessNameEl.style.padding = '0'
+      businessNameEl.style.lineHeight = '1.3'
+      businessNameEl.style.marginBottom = isMobile ? '8px' : '12px'
+      bottomSection.appendChild(businessNameEl)
 
-      // URL
-      const urlEl = document.createElement('p')
-      urlEl.textContent = url
-      urlEl.style.fontSize = '18px'
-      urlEl.style.color = secondaryColor
-      urlEl.style.margin = '0 0 16px 0'
-      urlEl.style.wordBreak = 'break-all'
-      footerSection.appendChild(urlEl)
+      // URL with proper spacing
+      const urlEl = document.createElement('div')
+      urlEl.style.margin = '0'
+      urlEl.style.padding = isMobile ? '8px 0' : '12px 0'
+      urlEl.style.minHeight = isMobile ? '32px' : '40px'
+      urlEl.style.display = 'flex'
+      urlEl.style.alignItems = 'center'
+      urlEl.style.justifyContent = 'center'
+      
+      const urlText = document.createElement('p')
+      urlText.textContent = url
+      urlText.style.fontSize = isMobile ? '11px' : '14px'
+      urlText.style.color = logoColors?.primary || '#6b7280'
+      urlText.style.margin = '0'
+      urlText.style.padding = '0'
+      urlText.style.wordBreak = 'break-word'
+      urlText.style.overflowWrap = 'break-word'
+      urlText.style.hyphens = 'auto'
+      urlText.style.lineHeight = '1.6'
+      urlText.style.maxWidth = '100%'
+      urlText.style.textAlign = 'center'
+      urlText.style.whiteSpace = 'normal'
+      
+      urlEl.appendChild(urlText)
+      bottomSection.appendChild(urlEl)
 
       // Contact number if provided
       if (contactNumber.trim()) {
+        const contactWrapper = document.createElement('div')
+        contactWrapper.style.margin = '0'
+        contactWrapper.style.padding = isMobile ? '4px 0' : '8px 0'
+        contactWrapper.style.minHeight = isMobile ? '24px' : '32px'
+        contactWrapper.style.display = 'flex'
+        contactWrapper.style.alignItems = 'center'
+        contactWrapper.style.justifyContent = 'center'
+        
         const contactEl = document.createElement('p')
-        contactEl.textContent = `📞 ${contactNumber.trim()}`
-        contactEl.style.fontSize = '18px'
-        contactEl.style.color = secondaryColor
-        contactEl.style.margin = '0 0 16px 0'
+        contactEl.style.fontSize = isMobile ? '12px' : '15px'
+        contactEl.style.color = logoColors?.primary || '#6b7280'
+        contactEl.style.margin = '0'
+        contactEl.style.padding = '0'
         contactEl.style.fontWeight = '500'
-        footerSection.appendChild(contactEl)
+        contactEl.style.display = 'flex'
+        contactEl.style.alignItems = 'center'
+        contactEl.style.justifyContent = 'center'
+        contactEl.style.gap = '8px'
+        contactEl.style.lineHeight = '1.5'
+        contactEl.innerHTML = `<span>📞</span><span>${contactNumber.trim()}</span>`
+        
+        contactWrapper.appendChild(contactEl)
+        bottomSection.appendChild(contactWrapper)
       }
 
       // Google Reviews indicator for feedback
       if (qrType === 'feedback') {
+        const reviewWrapper = document.createElement('div')
+        reviewWrapper.style.margin = '0'
+        reviewWrapper.style.padding = isMobile ? '8px 0' : '12px 0'
+        reviewWrapper.style.minHeight = isMobile ? '32px' : '40px'
+        reviewWrapper.style.display = 'flex'
+        reviewWrapper.style.alignItems = 'center'
+        reviewWrapper.style.justifyContent = 'center'
+        
         const reviewFooter = document.createElement('div')
         reviewFooter.style.display = 'flex'
         reviewFooter.style.alignItems = 'center'
         reviewFooter.style.justifyContent = 'center'
-        reviewFooter.style.gap = '12px'
-        reviewFooter.style.marginBottom = '12px'
-        
+        reviewFooter.style.gap = isMobile ? '8px' : '12px'
+        reviewFooter.style.margin = '0'
+        reviewFooter.style.padding = '0'
+
         reviewFooter.innerHTML = `
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#4285F4">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#4285F4">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          <span style="font-size: 16px; color: ${secondaryColor}; font-weight: 500;">Google Reviews</span>
+          <span style="font-size: ${isMobile ? '11px' : '13px'}; color: ${logoColors?.primary || '#6b7280'}; font-weight: 500;">Google Reviews</span>
           <div style="display: flex; gap: 2px;">
-            ${Array(5).fill(0).map(() => `<svg width="18" height="18" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
+            ${Array(5).fill(0).map(() => `<svg width="12" height="12" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('')}
           </div>
         `
-        footerSection.appendChild(reviewFooter)
+        
+        reviewWrapper.appendChild(reviewFooter)
+        bottomSection.appendChild(reviewWrapper)
       }
 
-      // Final instruction
+      // Footer instruction with proper spacing
+      const instructionWrapper = document.createElement('div')
+      instructionWrapper.style.margin = '0'
+      instructionWrapper.style.padding = isMobile ? '12px 0 0 0' : '16px 0 0 0'
+      instructionWrapper.style.minHeight = isMobile ? '28px' : '36px'
+      instructionWrapper.style.display = 'flex'
+      instructionWrapper.style.alignItems = 'center'
+      instructionWrapper.style.justifyContent = 'center'
+      
       const instruction = document.createElement('p')
       instruction.textContent = getFooterText()
-      instruction.style.fontSize = '16px'
-      instruction.style.color = secondaryColor
+      instruction.style.fontSize = isMobile ? '10px' : '13px'
+      instruction.style.color = logoColors?.secondary || '#9ca3af'
       instruction.style.margin = '0'
+      instruction.style.padding = '0'
       instruction.style.fontWeight = '500'
-      footerSection.appendChild(instruction)
+      instruction.style.lineHeight = '1.5'
+      instruction.style.textAlign = 'center'
+      
+      instructionWrapper.appendChild(instruction)
+      bottomSection.appendChild(instructionWrapper)
 
-      // Assemble everything
-      innerContainer.appendChild(headerSection)
-      innerContainer.appendChild(qrSection)
-      innerContainer.appendChild(footerSection)
-      downloadContainer.appendChild(innerContainer)
+      // Assemble the container
+      qrContainer.appendChild(topSection)
+      qrContainer.appendChild(qrSection)
+      qrContainer.appendChild(bottomSection)
+      downloadContainer.appendChild(qrContainer)
 
       // Add to DOM temporarily
       document.body.appendChild(downloadContainer)
 
-      // Wait for all images to load
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Wait for images to load
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
-      // Try html2canvas first (usually better with borders)
+      // Try html2canvas first
       try {
-        const canvasWidth = isMobile ? 800 : 1000
-        const canvasHeight = isMobile ? 1000 : 1200
-        
-        const canvas = await html2canvas(downloadContainer, {
-          width: canvasWidth,
-          height: canvasHeight,
-          scale: 3, // Higher scale for better quality
+        const canvas = await html2canvas(qrContainer, {
+          scale: 3,
           backgroundColor: '#ffffff',
           useCORS: true,
           allowTaint: true,
-          imageTimeout: 15000,
-          removeContainer: false,
-          scrollX: 0,
-          scrollY: 0,
-          windowWidth: canvasWidth,
-          windowHeight: canvasHeight,
-          logging: false
+          imageTimeout: 10000,
+          logging: false,
+          width: parseInt(qrContainer.style.width) || (isMobile ? 350 : 700),
+          height: parseInt(qrContainer.style.minHeight) || (isMobile ? 580 : 950)
         })
 
         const dataUrl = canvas.toDataURL('image/png', 1.0)
@@ -743,30 +810,19 @@ export default function QRCodeGenerator() {
         link.click()
         document.body.removeChild(link)
 
-        toast.success("Perfect QR code downloaded successfully!")
+        toast.success("QR code downloaded successfully!")
         return
 
       } catch (html2canvasError) {
         console.log("html2canvas failed, trying htmlToImage:", html2canvasError)
         
-        // Fallback to htmlToImage with better options
-        const canvasWidth = isMobile ? 800 : 1000
-        const canvasHeight = isMobile ? 1000 : 1200
-        
-        const dataUrl = await htmlToImage.toPng(downloadContainer, {
+        // Fallback to htmlToImage
+        const dataUrl = await htmlToImage.toPng(qrContainer, {
           quality: 1,
           backgroundColor: '#ffffff',
-          width: canvasWidth,
-          height: canvasHeight,
-          pixelRatio: 3, // Higher pixel ratio for better quality
-          canvasWidth: canvasWidth * 3,
-          canvasHeight: canvasHeight * 3,
-          style: {
-            transform: 'none',
-            width: `${canvasWidth}px`,
-            height: `${canvasHeight}px`,
-            boxSizing: 'border-box'
-          }
+          pixelRatio: 3,
+          width: parseInt(qrContainer.style.width) || (isMobile ? 340 : 700),
+          height: parseInt(qrContainer.style.minHeight) || (isMobile ? 450 : 800)
         })
 
         // Clean up
