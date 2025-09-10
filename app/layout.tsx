@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 import StructuredData from "@/components/StructuredData";
+import EnhancedStructuredData from "@/components/EnhancedStructuredData";
 import { Toaster } from "@/components/ui/sonner";
 
 import { Analytics } from "@vercel/analytics/next";
@@ -150,7 +151,10 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-site-verification",
+    google: "google-site-verification=your-actual-verification-code-here",
+    other: {
+      'msvalidate.01': 'your-bing-verification-code-here',
+    },
   },
   icons: {
     icon: [
@@ -222,17 +226,17 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Google AdSense */}
-        {showAds && (
+       
           <Script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4895071519734738"
             crossOrigin="anonymous"
             strategy="afterInteractive"
           />
-        )}
+       
 
         <StructuredData />
+        <EnhancedStructuredData />
       </head>
       <body suppressHydrationWarning>
      

@@ -15,7 +15,9 @@ export default function robots(): MetadataRoute.Robots {
           '/private/',
           '*.json',
           '/tmp/',
+          '/.*',  // Hidden files
         ],
+        crawlDelay: 1,  // Be respectful to server
       },
       {
         userAgent: 'Googlebot',
@@ -25,6 +27,7 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',
           '/private/',
         ],
+        crawlDelay: 0,  // Google can crawl faster
       },
       {
         userAgent: 'Bingbot',
@@ -34,9 +37,40 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',
           '/private/',
         ],
+        crawlDelay: 1,
+      },
+      {
+        userAgent: 'facebookexternalhit',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/private/',
+        ],
+      },
+      {
+        userAgent: 'Twitterbot',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/private/',
+        ],
+      },
+      {
+        userAgent: 'LinkedInBot',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/private/',
+        ],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: [
+      `${baseUrl}/sitemap.xml`,
+      `${baseUrl}/sitemap-0.xml`,  // next-sitemap generated
+    ],
     host: baseUrl,
   }
 }

@@ -1,11 +1,12 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: "https://www.freeqrcodegenerator.shop",
-  generateRobotsTxt: false, // We already have a custom robots.ts
-  generateIndexSitemap: false, // For smaller sites, single sitemap is fine
-  changefreq: "daily",
+  generateRobotsTxt: false, // We have a custom robots.ts
+  generateIndexSitemap: true, // Generate index sitemap for better organization
+  changefreq: "weekly",
   priority: 0.7,
   sitemapSize: 5000,
+  autoLastmod: true,
 
   // Transform function to customize URLs
   transform: async (config, path) => {
@@ -15,6 +16,7 @@ module.exports = {
       changefreq: config.changefreq,
       priority: config.priority,
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+      alternateRefs: [],
     };
 
     // Homepage gets highest priority
@@ -38,6 +40,18 @@ module.exports = {
     // Content pages get medium-high priority
     else if (["/about", "/faq", "/resources"].includes(path)) {
       customConfig.priority = 0.8;
+      customConfig.changefreq = "weekly";
+    }
+
+    // Industry and QR type pages
+    else if (path.includes("/industries/") || path.includes("/qr-code-types/")) {
+      customConfig.priority = 0.7;
+      customConfig.changefreq = "weekly";
+    }
+
+    // Review helper and specialized tools
+    else if (["/review-helper", "/industry-links"].includes(path)) {
+      customConfig.priority = 0.7;
       customConfig.changefreq = "weekly";
     }
 
