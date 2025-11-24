@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { TopBannerAd, ContentAd, BottomBannerAd } from '@/components/AdSense'
 
 export const metadata: Metadata = {
   title: 'Restaurant QR Code Menu Generator | Free Digital Menu QR Codes',
@@ -19,12 +20,7 @@ export default function RestaurantQRCodes() {
       </div>
 
       {/* Ad Space - Top Banner */}
-      <div className="mb-12 text-center">
-        <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8">
-          <p className="text-gray-500 text-sm">Advertisement Space - 728x90 Banner</p>
-          <div className="h-20 bg-gray-200 rounded mt-2"></div>
-        </div>
-      </div>
+      <TopBannerAd />
 
       {/* Benefits Section */}
       <section className="mb-16">
@@ -111,12 +107,7 @@ export default function RestaurantQRCodes() {
       </section>
 
       {/* Ad Space - Middle Rectangle */}
-      <div className="mb-12 text-center">
-        <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6">
-          <p className="text-gray-500 text-sm">Advertisement Space - 300x250 Rectangle</p>
-          <div className="h-32 bg-gray-200 rounded mt-2 mx-auto max-w-xs"></div>
-        </div>
-      </div>
+      <ContentAd />
 
       {/* Features */}
       <section className="mb-16">
@@ -235,12 +226,7 @@ export default function RestaurantQRCodes() {
       </section>
 
       {/* Bottom Ad Space */}
-      <div className="text-center">
-        <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8">
-          <p className="text-gray-500 text-sm">Advertisement Space - 728x90 Banner</p>
-          <div className="h-20 bg-gray-200 rounded mt-2"></div>
-        </div>
-      </div>
+      <BottomBannerAd />
     </div>
   )
 }
