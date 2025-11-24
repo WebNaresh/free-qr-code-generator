@@ -105,26 +105,244 @@ export default function Home() {
           </section>
         </div>
 
-        {/* SEO Content - Collapsible or Compact */}
+        {/* Comprehensive Educational Content */}
         <section className="mb-16">
           <div className="glass-panel p-8 rounded-2xl">
-            <h2 className="text-2xl font-bold mb-6 text-slate-800">Frequently Asked Questions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-semibold text-slate-800 mb-2">Is it really free?</h3>
-                <p className="text-slate-600 text-sm">Yes, our QR code generator is 100% free for both personal and commercial use.</p>
+            <h2 className="text-3xl font-bold mb-6 text-slate-800">Complete Guide to QR Codes</h2>
+            
+            {/* What is a QR Code */}
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold mb-4 text-slate-800">What is a QR Code?</h3>
+              <p className="text-slate-700 mb-4 leading-relaxed">
+                QR (Quick Response) codes are two-dimensional barcodes invented by Denso Wave in 1994. Originally designed 
+                for tracking automotive parts, QR codes have evolved into a versatile tool for instant information sharing. 
+                They can store up to 4,296 alphanumeric characters and are readable by smartphone cameras and dedicated QR scanners.
+              </p>
+              <p className="text-slate-700 mb-4 leading-relaxed">
+                Unlike traditional barcodes that store data in one dimension, QR codes use a matrix pattern to encode information 
+                both horizontally and vertically. This allows them to store significantly more data while maintaining a compact size. 
+                The three distinctive square patterns in the corners help scanners quickly identify and orient the code.
+              </p>
+            </div>
+
+            {/* How QR Codes Work */}
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold mb-4 text-slate-800">How QR Codes Work</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h4 className="font-bold text-slate-800 mb-3">Encoding Process</h4>
+                  <ul className="space-y-2 text-slate-700">
+                    <li className="flex items-start">
+                      <span className="text-blue-600 mr-2">•</span>
+                      <span>Data is converted into binary format</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-600 mr-2">•</span>
+                      <span>Error correction codes are added (Reed-Solomon algorithm)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-600 mr-2">•</span>
+                      <span>Pattern is arranged in a square grid</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-600 mr-2">•</span>
+                      <span>Finder patterns (corners) and timing patterns are added</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h4 className="font-bold text-slate-800 mb-3">Scanning Process</h4>
+                  <ul className="space-y-2 text-slate-700">
+                    <li className="flex items-start">
+                      <span className="text-green-600 mr-2">•</span>
+                      <span>Camera captures QR code image</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-600 mr-2">•</span>
+                      <span>Software identifies finder patterns</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-600 mr-2">•</span>
+                      <span>Image is processed and decoded</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-600 mr-2">•</span>
+                      <span>Data is extracted and displayed/executed</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-slate-800 mb-2">Do the codes expire?</h3>
-                <p className="text-slate-600 text-sm">No, the static QR codes generated here will work forever and never expire.</p>
+            </div>
+
+            {/* Types of QR Codes */}
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold mb-4 text-slate-800">Types of QR Codes</h3>
+              <div className="space-y-4">
+                <div className="border-l-4 border-blue-500 pl-4 py-2">
+                  <h4 className="font-bold text-slate-800 mb-2">Static QR Codes</h4>
+                  <p className="text-slate-700">
+                    Data is permanently encoded into the QR code. Once generated, the information cannot be changed. 
+                    Best for permanent content like product information, business cards, or URLs that won't change. 
+                    These codes work forever without requiring any external service.
+                  </p>
+                </div>
+                <div className="border-l-4 border-green-500 pl-4 py-2">
+                  <h4 className="font-bold text-slate-800 mb-2">Dynamic QR Codes</h4>
+                  <p className="text-slate-700">
+                    The QR code contains a short URL that redirects to the actual content. You can change the destination 
+                    without regenerating the code. Ideal for marketing campaigns, tracking analytics, and content that needs 
+                    regular updates. Requires a subscription service to maintain the redirect.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-slate-800 mb-2">Can I add my logo?</h3>
-                <p className="text-slate-600 text-sm">Absolutely! You can upload your custom logo and we'll embed it in the QR code.</p>
+            </div>
+
+            {/* Best Practices */}
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold mb-4 text-slate-800">QR Code Best Practices</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-blue-50 p-5 rounded-lg">
+                  <h4 className="font-bold text-blue-900 mb-3">Size & Placement</h4>
+                  <ul className="space-y-2 text-slate-700 text-sm">
+                    <li>• Minimum size: 2cm x 2cm (0.8" x 0.8")</li>
+                    <li>• Larger codes for distance scanning</li>
+                    <li>• Place at eye level when possible</li>
+                    <li>• Ensure good lighting conditions</li>
+                    <li>• Avoid curved or reflective surfaces</li>
+                  </ul>
+                </div>
+                <div className="bg-green-50 p-5 rounded-lg">
+                  <h4 className="font-bold text-green-900 mb-3">Design Guidelines</h4>
+                  <ul className="space-y-2 text-slate-700 text-sm">
+                    <li>• Maintain high contrast (dark on light)</li>
+                    <li>• Test with multiple devices</li>
+                    <li>• Use error correction level H for logos</li>
+                    <li>• Keep logos under 30% of code area</li>
+                    <li>• Avoid excessive customization</li>
+                  </ul>
+                </div>
+                <div className="bg-purple-50 p-5 rounded-lg">
+                  <h4 className="font-bold text-purple-900 mb-3">Content Tips</h4>
+                  <ul className="space-y-2 text-slate-700 text-sm">
+                    <li>• Mobile-optimize landing pages</li>
+                    <li>• Keep URLs short when possible</li>
+                    <li>• Add clear call-to-action text</li>
+                    <li>• Test in different lighting</li>
+                    <li>• Provide alternative access method</li>
+                  </ul>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-slate-800 mb-2">Is it high resolution?</h3>
-                <p className="text-slate-600 text-sm">Yes, you can download high-quality PNG images suitable for printing.</p>
+            </div>
+
+            {/* Industry Applications */}
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold mb-4 text-slate-800">Industry Applications</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-3">Retail & E-Commerce</h4>
+                  <p className="text-slate-700 mb-3">
+                    QR codes revolutionize shopping experiences by enabling contactless payments, product authentication, 
+                    and instant access to detailed product information, reviews, and promotional offers.
+                  </p>
+                  <ul className="space-y-1 text-slate-600 text-sm">
+                    <li>• Product details and specifications</li>
+                    <li>• Customer reviews and ratings</li>
+                    <li>• Mobile payment integration</li>
+                    <li>• Loyalty program enrollment</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-3">Healthcare</h4>
+                  <p className="text-slate-700 mb-3">
+                    Medical facilities use QR codes for patient identification, medication tracking, appointment scheduling, 
+                    and accessing medical records securely while maintaining HIPAA compliance.
+                  </p>
+                  <ul className="space-y-1 text-slate-600 text-sm">
+                    <li>• Patient wristband identification</li>
+                    <li>• Medication administration tracking</li>
+                    <li>• Lab results access</li>
+                    <li>• Appointment confirmations</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-3">Education</h4>
+                  <p className="text-slate-700 mb-3">
+                    Educational institutions leverage QR codes for attendance tracking, resource sharing, interactive 
+                    learning materials, and seamless access to online course content.
+                  </p>
+                  <ul className="space-y-1 text-slate-600 text-sm">
+                    <li>• Digital textbook access</li>
+                    <li>• Attendance and check-in</li>
+                    <li>• Assignment submission</li>
+                    <li>• Campus navigation</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-3">Hospitality & Tourism</h4>
+                  <p className="text-slate-700 mb-3">
+                    Hotels and tourist attractions enhance guest experiences with QR codes for check-in, digital menus, 
+                    local guides, and contactless service requests.
+                  </p>
+                  <ul className="space-y-1 text-slate-600 text-sm">
+                    <li>• Digital room keys and check-in</li>
+                    <li>• Contactless menu ordering</li>
+                    <li>• Tourist information and guides</li>
+                    <li>• Feedback collection</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* FAQ Section */}
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-slate-800">Frequently Asked Questions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-slate-50 p-5 rounded-lg">
+                  <h4 className="font-semibold text-slate-800 mb-2">Is it really free?</h4>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    Yes, our QR code generator is 100% free for both personal and commercial use. There are no hidden fees, 
+                    no watermarks, and no limitations on the number of QR codes you can create. We believe in providing 
+                    accessible tools for everyone.
+                  </p>
+                </div>
+                <div className="bg-slate-50 p-5 rounded-lg">
+                  <h4 className="font-semibold text-slate-800 mb-2">Do the codes expire?</h4>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    No, static QR codes generated here will work forever and never expire. Since the data is encoded directly 
+                    into the image, they don't rely on any external service. As long as you have the image file, your QR code 
+                    will continue to function.
+                  </p>
+                </div>
+                <div className="bg-slate-50 p-5 rounded-lg">
+                  <h4 className="font-semibold text-slate-800 mb-2">Can I add my logo?</h4>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    Absolutely! You can upload your custom logo and we'll intelligently embed it in the center of your QR code. 
+                    Our system uses advanced error correction to ensure the code remains scannable even with logo overlay. 
+                    We recommend keeping logos under 30% of the code area for optimal scanning.
+                  </p>
+                </div>
+                <div className="bg-slate-50 p-5 rounded-lg">
+                  <h4 className="font-semibold text-slate-800 mb-2">Is it high resolution?</h4>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    Yes, you can download high-quality PNG images at up to 3000x3000 pixels, suitable for professional printing 
+                    on banners, business cards, posters, and more. We also offer PDF export for vector-quality output at any size.
+                  </p>
+                </div>
+                <div className="bg-slate-50 p-5 rounded-lg">
+                  <h4 className="font-semibold text-slate-800 mb-2">Are my QR codes private and secure?</h4>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    Yes, we prioritize your privacy. QR codes are generated locally in your browser when possible, and we never 
+                    store your data or track your QR codes. Your information is yours alone, and we don't collect any personal data.
+                  </p>
+                </div>
+                <div className="bg-slate-50 p-5 rounded-lg">
+                  <h4 className="font-semibold text-slate-800 mb-2">What devices can scan QR codes?</h4>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    Most modern smartphones (iPhone and Android) have built-in QR code scanning in their camera apps. Simply 
+                    point your camera at the QR code and a notification will appear. Older devices may require a dedicated 
+                    QR scanner app from their app store.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

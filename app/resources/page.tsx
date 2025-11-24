@@ -70,9 +70,9 @@ const resources = [
         type: "external"
       },
       {
-        title: "QR Code Error Correction Guide",
-        description: "Technical guide to QR code error correction levels",
-        url: "/blog/qr-code-error-correction-guide",
+        title: "QR Code Technical Guide",
+        description: "Technical guide to QR code error correction and optimization",
+        url: "/blog#technical",
         type: "internal"
       }
     ]
@@ -81,21 +81,21 @@ const resources = [
     category: "Business & Marketing Resources",
     items: [
       {
-        title: "QR Code Marketing Case Studies",
-        description: "Real-world examples of successful QR code campaigns",
-        url: "/blog/qr-code-marketing-case-studies",
+        title: "QR Code Marketing Strategies",
+        description: "Real-world strategies for successful QR code campaigns",
+        url: "/blog#marketing",
         type: "internal"
       },
       {
-        title: "Restaurant QR Code Menu Solutions",
+        title: "Restaurant QR Code Solutions",
         description: "Complete guide for implementing digital menus",
-        url: "/blog/restaurant-qr-code-menus-guide",
+        url: "/restaurant-qr-codes",
         type: "internal"
       },
       {
-        title: "Google Reviews QR Code Strategy",
+        title: "Google Reviews QR Strategy",
         description: "Boost your online reputation with QR codes",
-        url: "/blog/google-reviews-qr-codes-guide",
+        url: "/review-helper",
         type: "internal"
       }
     ]
@@ -107,25 +107,29 @@ const tools = [
     title: "Free QR Code Generator",
     description: "Create custom QR codes for business, reviews, and websites",
     url: "/",
-    featured: true
+    featured: true,
+    available: true
   },
   {
-    title: "QR Code Scanner Test",
-    description: "Test your QR codes across different devices and apps",
-    url: "/tools/qr-scanner-test",
-    featured: false
+    title: "WiFi QR Code Generator",
+    description: "Share WiFi credentials with QR codes",
+    url: "/tools/wifi-qr",
+    featured: true,
+    available: true
   },
   {
-    title: "QR Code Analytics Tracker",
-    description: "Track and analyze QR code performance",
-    url: "/tools/qr-analytics",
-    featured: false
+    title: "vCard QR Generator",
+    description: "Create digital business card QR codes",
+    url: "/tools/vcard-qr",
+    featured: true,
+    available: true
   },
   {
-    title: "Bulk QR Code Generator",
-    description: "Generate multiple QR codes at once",
-    url: "/tools/bulk-generator",
-    featured: false
+    title: "QR Code Validator",
+    description: "Validate and decode QR code contents",
+    url: "/tools/qr-validator",
+    featured: true,
+    available: true
   }
 ]
 
