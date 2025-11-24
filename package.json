@@ -51,6 +51,7 @@
     "html-to-image": "^1.11.13",
     "html2canvas": "latest",
     "input-otp": "1.4.1",
+    "jspdf": "^3.0.4",
     "lucide-react": "^0.454.0",
     "next": "16.0.3",
     "next-sitemap": "^4.2.3",

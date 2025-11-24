@@ -6,12 +6,14 @@ import { useState, useRef, useEffect } from "react"
 import QRCode from "qrcode"
 import * as htmlToImage from "html-to-image"
 import html2canvas from "html2canvas"
+import { jsPDF } from "jspdf"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Download, Star, Globe, Upload, X, Smartphone, Tablet, Monitor, Sparkles } from "lucide-react"
+import { Download, Star, Globe, Upload, X, Sparkles, Palette, Layout, Smartphone, Monitor } from "lucide-react"
 import { toast } from "sonner"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 // Google Icon Component
 const GoogleIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
@@ -29,7 +31,7 @@ const StarRating = ({ rating = 5, className = "" }: { rating?: number; className
     {[1, 2, 3, 4, 5].map((star) => (
       <Star
         key={star}
-        className={`w-5 h-5 ${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'}`}
+        className={`w-4 h-4 ${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'}`}
       />
     ))}
   </div>
@@ -71,6 +73,7 @@ export default function QRCodeGenerator() {
   const [logoSize, setLogoSize] = useState<'small' | 'medium' | 'large' | 'extra-large' | 'jumbo'>('medium')
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
 
@@ -255,15 +258,6 @@ export default function QRCodeGenerator() {
         dark: darkColor,
         border: primaryColor, // Default border color
       })
-
-      console.log("Extracted colors:", {
-        primary: primaryColor,
-        secondary: secondaryColor,
-        light: lightColor,
-        dark: darkColor,
-        darkest: darkestColor,
-        allColors: distinctColors,
-      })
     }
 
     img.src = imageUrl
@@ -421,7 +415,7 @@ export default function QRCodeGenerator() {
       trackQRGeneration()
 
       if (qrType === "feedback" && useAiHelper) {
-        toast.success("Your AI-powered review QR code is ready! When scanned, it will help customers write better reviews.")
+        toast.success("Your AI-powered review QR code is ready!")
       } else {
         toast.success("Your QR code is ready for download!")
       }
@@ -878,6 +872,131 @@ export default function QRCodeGenerator() {
     } catch (error) {
       console.error("Simple download failed:", error)
       toast.error("Download failed. Please try right-clicking the QR code and saving it manually.")
+    }
+  }
+
+  const downloadPDF = async () => {
+    if (!qrCode) {
+      toast.error("Please generate a QR code first")
+      return
+    }
+
+    setIsGeneratingPdf(true)
+    toast.info("Generating professional PDF...")
+
+    try {
+      // Create new PDF document (A4 size)
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      })
+
+      const pageWidth = doc.internal.pageSize.getWidth()
+      const pageHeight = doc.internal.pageSize.getHeight()
+      const margin = 20
+      const contentWidth = pageWidth - (margin * 2)
+
+      // Add a border around the page content
+      doc.setDrawColor(200, 200, 200)
+      doc.setLineWidth(0.5)
+      doc.rect(margin, margin, contentWidth, pageHeight - (margin * 2), "S")
+
+      let currentY = margin + 30
+
+      // Add Logo if exists
+      if (uploadedImage) {
+        try {
+          // We need to get image dimensions to maintain aspect ratio
+          const imgProps = await new Promise<{ width: number; height: number }>((resolve) => {
+            const img = new Image()
+            img.src = uploadedImage
+            img.onload = () => resolve({ width: img.width, height: img.height })
+          })
+          
+          const logoWidth = 30
+          const logoHeight = (imgProps.height / imgProps.width) * logoWidth
+          
+          doc.addImage(uploadedImage, "PNG", (pageWidth - logoWidth) / 2, currentY, logoWidth, logoHeight)
+          currentY += logoHeight + 15
+        } catch (e) {
+          console.error("Error adding logo to PDF", e)
+        }
+      }
+
+      // Add Header Text
+      doc.setFont("helvetica", "bold")
+      doc.setFontSize(24)
+      // Use dark color from palette or default
+      const darkColor = logoColors ? hexToRgb(logoColors.dark) : { r: 31, g: 41, b: 55 }
+      if (darkColor) doc.setTextColor(darkColor.r, darkColor.g, darkColor.b)
+      else doc.setTextColor(31, 41, 55)
+      
+      doc.text(getHeaderText(), pageWidth / 2, currentY, { align: "center" })
+      currentY += 10
+
+      // Add Subheader Text
+      doc.setFont("helvetica", "normal")
+      doc.setFontSize(14)
+      // Use primary color from palette or default
+      const primaryColor = logoColors ? hexToRgb(logoColors.primary) : { r: 107, g: 114, b: 128 }
+      if (primaryColor) doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
+      else doc.setTextColor(107, 114, 128)
+
+      doc.text(getSubHeaderText(), pageWidth / 2, currentY, { align: "center" })
+      currentY += 20
+
+      // Add QR Code
+      const qrSize = 80
+      doc.addImage(qrCode, "PNG", (pageWidth - qrSize) / 2, currentY, qrSize, qrSize)
+      currentY += qrSize + 20
+
+      // Add Business Name
+      doc.setFont("helvetica", "bold")
+      doc.setFontSize(20)
+      if (darkColor) doc.setTextColor(darkColor.r, darkColor.g, darkColor.b)
+      else doc.setTextColor(31, 41, 55)
+      
+      doc.text(businessName, pageWidth / 2, currentY, { align: "center" })
+      currentY += 10
+
+      // Add URL
+      doc.setFont("helvetica", "normal")
+      doc.setFontSize(12)
+      if (primaryColor) doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
+      else doc.setTextColor(107, 114, 128)
+      
+      // Split URL if it's too long
+      const splitUrl = doc.splitTextToSize(url, contentWidth - 40)
+      doc.text(splitUrl, pageWidth / 2, currentY, { align: "center" })
+      currentY += (splitUrl.length * 5) + 5
+
+      // Add Contact Number
+      if (contactNumber) {
+        doc.setFontSize(12)
+        doc.text(`Contact: ${contactNumber}`, pageWidth / 2, currentY, { align: "center" })
+        currentY += 10
+      }
+
+      // Add Footer Text at the bottom
+      doc.setFontSize(10)
+      doc.setTextColor(150, 150, 150)
+      doc.text(getFooterText(), pageWidth / 2, pageHeight - margin - 15, { align: "center" })
+      
+      // Add "Powered by" footer
+      doc.setFontSize(8)
+      doc.setTextColor(200, 200, 200)
+      doc.text("Generated by Free QR Code Generator", pageWidth / 2, pageHeight - margin - 5, { align: "center" })
+
+      // Save PDF
+      doc.save(`${businessName.replace(/\s+/g, "_")}_${qrType}_qrcode.pdf`)
+      toast.success("PDF downloaded successfully!")
+
+    } catch (error) {
+      console.error("Error generating PDF:", error)
+      toast.error("Failed to generate PDF. Please try again.")
+    } finally {
+      setIsGeneratingPdf(false)
     }
   }
 
@@ -1595,6 +1714,20 @@ export default function QRCodeGenerator() {
                 >
                   <Download className={`${isMobile ? 'mr-2 h-4 w-4' : 'mr-4 h-6 w-6'}`} />
                   {isDownloading ? "Creating Image..." : "Download Full QR Code"}
+                </Button>
+
+                <Button
+                  onClick={downloadPDF}
+                  disabled={isGeneratingPdf}
+                  className={`w-full ${responsive.button} bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-200 font-bold flex items-center justify-center`}
+                  style={
+                    logoColors
+                      ? { background: `linear-gradient(to right, ${logoColors.dark}, ${logoColors.dark}AA)` }
+                      : {}
+                  }
+                >
+                  <Download className={`${isMobile ? 'mr-2 h-4 w-4' : 'mr-4 h-6 w-6'}`} />
+                  {isGeneratingPdf ? "Generating PDF..." : "Download as PDF"}
                 </Button>
 
                 <Button

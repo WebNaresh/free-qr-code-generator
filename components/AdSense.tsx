@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface AdSenseProps {
   adSlot: string
@@ -21,7 +21,15 @@ export default function AdSense({
   fullWidthResponsive = true,
   className = ''
 }: AdSenseProps) {
+  const [isMounted, setIsMounted] = useState(false)
+
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted) return
+
     try {
       if (typeof window !== 'undefined' && window.adsbygoogle) {
         window.adsbygoogle.push({})
@@ -29,7 +37,7 @@ export default function AdSense({
     } catch (error) {
       console.error('AdSense error:', error)
     }
-  }, [])
+  }, [isMounted])
 
   const getAdStyle = () => {
     switch (adFormat) {
@@ -44,8 +52,12 @@ export default function AdSense({
     }
   }
 
+  if (!isMounted) {
+    return <div className={`text-center ${className} min-h-[100px] bg-gray-50/50`} />
+  }
+
   return (
-    <div className={`text-center ${className}`}>
+    <div className={`text-center ${className} min-h-[100px]`}>
       <ins
         className="adsbygoogle"
         style={getAdStyle()}
@@ -53,6 +65,7 @@ export default function AdSense({
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-full-width-responsive={fullWidthResponsive}
+        suppressHydrationWarning
       />
     </div>
   )
